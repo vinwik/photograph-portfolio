@@ -11,6 +11,7 @@
     "react-scripts": "3.4.1",
     "react-scrollable-anchor": "^0.6.1",
     "react-spring": "^8.0.27",
+    "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^5.1.1"
   },
   "scripts": {
