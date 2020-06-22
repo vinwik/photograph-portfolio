@@ -1,13 +1,55 @@
-body {
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  -ms-user-select: none;
+      user-select: none;
+}
+
+html {
+  -ms-scroll-snap-points-y: repeat(100vh);
+      scroll-snap-points-y: repeat(100vh);
+  -webkit-scroll-snap-points-y: repeat(100vh);
+  -ms-scroll-snap-destination: 0 0;
+      scroll-snap-destination: 0 0;
+  -webkit-scroll-snap-destination: 0 0;
+  -ms-scroll-snap-type: y mandatory;
+      scroll-snap-type: y mandatory;
+  -ms-scroll-snap-type: mandatory;
+      scroll-snap-type: mandatory;
+  -webkit-scroll-snap-type: mandatory;
+  --scroll-behavior: smooth;
+  scroll-behavior: smooth;
+  overflow: auto;
+}
+
+body {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* background-color: #000; */
+  background-color: #1d1810;
+  /* background: radial-gradient(ellipse at 50%, #4a2d18 0%, #1d1810 60%); */
+  color: #fff;
+  -ms-scroll-snap-points-y: repeat(100vh);
+      scroll-snap-points-y: repeat(100vh);
+  -webkit-scroll-snap-points-y: repeat(100vh);
+  -ms-scroll-snap-destination: 0 0;
+      scroll-snap-destination: 0 0;
+  -webkit-scroll-snap-destination: 0 0;
+  -ms-scroll-snap-type: y mandatory;
+      scroll-snap-type: y mandatory;
+  -ms-scroll-snap-type: mandatory;
+      scroll-snap-type: mandatory;
+  -webkit-scroll-snap-type: mandatory;
+  overflow: auto;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+/*# sourceMappingURL=index.css.map */
