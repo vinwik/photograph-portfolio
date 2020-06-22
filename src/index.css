@@ -24,7 +24,6 @@ html {
   -webkit-scroll-snap-type: mandatory;
   --scroll-behavior: smooth;
   scroll-behavior: smooth;
-  overflow: auto;
 }
 
 body {
@@ -46,7 +45,8 @@ body {
   -ms-scroll-snap-type: mandatory;
       scroll-snap-type: mandatory;
   -webkit-scroll-snap-type: mandatory;
-  overflow: auto;
+  --scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 code {
