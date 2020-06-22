@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
-import "./App.css";
 import styled from "styled-components";
 import { ReactComponent as Logo } from "./assets/jfr-logo.svg";
 import { ReactComponent as LogoIntro } from "./assets/jfr-logo-intro.svg";
@@ -7,12 +6,8 @@ import { useSpring, animated } from "react-spring";
 
 import ScrollableAnchor from "react-scrollable-anchor";
 import { configureAnchors } from "react-scrollable-anchor";
-import "scroll-behavior-polyfill";
-
-// import { polyfill } from "seamless-scroll-polyfill";
 
 configureAnchors({ offset: -window.innerHeight * 0.2 });
-// configureAnchors({ offset: -10 });
 
 const slides = [
   {
@@ -80,41 +75,41 @@ function App() {
     }
   };
 
-  const handleWheel = (e) => {
-    if (e.deltaY > 0) {
-      setTimeout(() => {
-        setIndex(index + 1);
-      }, 0);
-    }
-    if (e.deltaY < 0) {
-      setIndex(index - 1);
-    }
+  // const handleWheel = (e) => {
+  //   if (e.deltaY > 0) {
+  //     setTimeout(() => {
+  //       setIndex(index + 1);
+  //     }, 0);
+  //   }
+  //   if (e.deltaY < 0) {
+  //     setIndex(index - 1);
+  //   }
 
-    if (index > 2) {
-      setIndex(0);
-    }
-    if (index < 0) {
-      setIndex(2);
-    }
-  };
+  //   if (index > 2) {
+  //     setIndex(0);
+  //   }
+  //   if (index < 0) {
+  //     setIndex(2);
+  //   }
+  // };
 
-  const handleKey = (e) => {
-    // setTimeout(() => {
-    if (e.keyCode === 40 && index < 2) {
-      // console.log(indexRef.current);
-      setIndex(index + 1);
-    }
-    if (e.keyCode === 40 && index === 2) {
-      setIndex(0);
-    }
-    // }, 1000);
+  // const handleKey = (e) => {
+  //   // setTimeout(() => {
+  //   if (e.keyCode === 40 && index < 2) {
+  //     // console.log(indexRef.current);
+  //     setIndex(index + 1);
+  //   }
+  //   if (e.keyCode === 40 && index === 2) {
+  //     setIndex(0);
+  //   }
+  //   // }, 1000);
 
-    if (e.keyCode === 38 && index > 0) {
-      setIndex(index - 1);
-    } else if (e.keyCode === 38) {
-      setIndex(2);
-    }
-  };
+  //   if (e.keyCode === 38 && index > 0) {
+  //     setIndex(index - 1);
+  //   } else if (e.keyCode === 38) {
+  //     setIndex(2);
+  //   }
+  // };
 
   const AnimatedBgGradient = useSpring(
     index !== null &&

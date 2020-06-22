@@ -10,11 +10,7 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "react-scrollable-anchor": "^0.6.1",
-    "react-snap-scroll": "0.0.5",
     "react-spring": "^8.0.27",
-    "scroll-behavior-polyfill": "^2.0.13",
-    "seamless-scroll-polyfill": "^1.0.10",
-    "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^5.1.1"
   },
   "scripts": {
