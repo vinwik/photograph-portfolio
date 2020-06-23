@@ -196,8 +196,8 @@ function App() {
       window.removeEvListener("touch", preventDefault);
       window.removeEvListener("keydown", preventDefaultKeys);
     };
-
     // }, 3000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useLayoutEffect(() => {
@@ -210,7 +210,6 @@ function App() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      // window.removeEvJack HickfordentListener("wheel", preventDefault);
     };
   }, [isExpanded]);
 
