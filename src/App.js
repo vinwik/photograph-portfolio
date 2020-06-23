@@ -8,7 +8,7 @@ import { polyfill } from "smoothscroll-polyfill";
 
 // kick off the polyfill!
 
-import ScrollableAnchor from "react-scrollable-anchor";
+// import ScrollableAnchor from "react-scrollable-anchor";
 import { configureAnchors } from "react-scrollable-anchor";
 polyfill();
 
