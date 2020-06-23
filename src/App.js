@@ -1,13 +1,19 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { ReactComponent as Logo } from "./assets/jfr-logo.svg";
 import { ReactComponent as LogoIntro } from "./assets/jfr-logo-intro.svg";
 import { useSpring, animated } from "react-spring";
+// import "scroll-behavior-polyfill";
+import { polyfill } from "smoothscroll-polyfill";
+
+// kick off the polyfill!
 
 import ScrollableAnchor from "react-scrollable-anchor";
 import { configureAnchors } from "react-scrollable-anchor";
+polyfill();
 
 configureAnchors({ offset: -window.innerHeight * 0.2 });
+// configureAnchors({ offset: -100 });
 
 const slides = [
   {
@@ -45,6 +51,7 @@ function App() {
   const [introEnded, setIntroEnded] = useState(false);
   const [opacity, setOpacity] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const totalImages = useRef(0);
 
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -65,7 +72,25 @@ function App() {
     } else {
       setScrollPosition(2);
     }
+
+    // else if (position < height * 2) {
+    //   window.scrollTo({
+    //     behavior: "smooth",
+    //     top: height,
+    //   });
+    // } else {
+    //   window.scrollTo({
+    //     behavior: "smooth",
+    //     top: height * 2,
+    //   });
     // }
+    // }
+    // setTimeout(() => {
+    //   window.scrollTo({
+    //     behavior: "smooth",
+    //     top: window.innerHeight * scrollPosition,
+    //   })
+    // }, 0);
   };
 
   const handleLoaded = () => {
@@ -129,32 +154,69 @@ function App() {
     }
   );
 
+  const preventDefault = (e) => {
+    e.preventDefault();
+  };
+  // left: 37, up: 38, right: 39, down: 40,
+  // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
+  var keys = { 37: 1, 38: 1, 39: 1, 40: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1 };
+
+  const preventDefaultKeys = (e) => {
+    if (keys[e.keyCode]) {
+      preventDefault(e);
+      return false;
+    }
+  };
+
   useEffect(() => {
+    // window.scrollTo({ top: window.innerHeight });
     // setTimeout(() => {
+    // if ((window.pageYOffset = window.innerHeight - window.innerHeight * 0.2)) {
+    //   window.scrollBy(0, window.innerHeight * 0.2);
+    // }
     setIntroEnded(true);
     setIndex(0);
+    // window.addEventListener("wheel", preventDefault, {
+    //   passive: false,
+    // });
+    // window.addEventListener("touch", preventDefault, {
+    //   passive: false,
+    // });
+    window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
+    window.addEventListener("wheel", preventDefault, {
+      passive: false,
+    }); // modern desktop
+    window.addEventListener("touchmove", preventDefault, {
+      passive: false,
+    }); // mobile
+    window.addEventListener("keydown", preventDefaultKeys, false);
+    return () => {
+      window.removeEvListener("DOMMouseScroll", preventDefault);
+      window.removeEvListener("wheel", preventDefault);
+      window.removeEvListener("touch", preventDefault);
+      window.removeEvListener("keydown", preventDefaultKeys);
+    };
 
     // }, 3000);
   }, []);
 
-  const preventDefault = (e) => {
-    e.preventDefault();
-  };
   useLayoutEffect(() => {
-    if (!isExpanded) {
-      window.addEventListener("wheel", preventDefault, {
-        passive: false,
-      });
-    }
+    // if (!isExpanded) {
+    // window.addEventListener("wheel", preventDefault, {
+    //   passive: false,
+    // });
+    // }
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("wheel", preventDefault);
+      // window.removeEvJack HickfordentListener("wheel", preventDefault);
     };
   }, [isExpanded]);
 
   return (
     <>
+      <GlobalStyle isScrolling={isScrolling} />
       <Intro introEnded={introEnded}>
         <LogoIntro />
       </Intro>
@@ -175,20 +237,24 @@ function App() {
                 <MenuItem
                   active={scrollPosition === index}
                   onClick={() => {
-                    window.scrollTo({
-                      left: 0,
-                      top: window.innerHeight * index,
-                      behavior: "smooth",
-                    });
                     setScrollPosition(index);
+                    setIsScrolling(true);
+                    window.scrollTo({
+                      behavior: "smooth",
+                      // left: 0,
+                      top: window.innerHeight * index,
+                    });
+
                     scrollPosition === index
                       ? setIsExpanded(false)
-                      : index + scrollPosition < 2
+                      : scrollPosition - index === 1 || -1
                       ? setTimeout(() => {
                           setIsExpanded(false);
+                          // setIsScrolling(false);
                         }, 600)
                       : setTimeout(() => {
                           setIsExpanded(false);
+                          // setIsScrolling(false);
                         }, 800);
                   }}
                 >
@@ -351,6 +417,13 @@ function App() {
 
 export default App;
 
+const GlobalStyle = createGlobalStyle`
+  body{
+  /* scroll-snap-type: y mandatory; */
+  scroll-snap-type: ${(props) => (props.isScrolling ? "none" : "y mandatory")}
+  }
+`;
+
 const Body = styled(animated.div)`
   /* height: ${(props) => (props.isExpanded ? "300vh" : "100vh")}; */
   height: 300vh;
@@ -434,8 +507,13 @@ const MenuList = styled.ul`
 `;
 
 const MenuItem = styled.h1`
-  opacity: ${(props) => (props.active ? 1 : 0.5)};
+  opacity: ${(props) => (props.active ? 1 : 0.3)};
   transition: opacity 0.6s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    opacity: ${(props) => (props.active ? 1 : 0.7)};
+  }
 `;
 
 const LogoWrapper = styled.div`
