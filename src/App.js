@@ -188,6 +188,8 @@ function App() {
       passive: false,
     }); // modern desktop
     window.addEventListener("touchstart", preventDefault, {
+      passive: false,
+    }); // mobile
     window.addEventListener("keydown", preventDefaultKeys, false);
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
