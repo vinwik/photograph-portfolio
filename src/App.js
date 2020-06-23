@@ -187,14 +187,14 @@ function App() {
     window.addEventListener("wheel", preventDefault, {
       passive: false,
     }); // modern desktop
-    window.addEventListener("touchstart", preventDefault, {
+    window.addEventListener("touchmove", preventDefault, {
       passive: false,
     }); // mobile
     window.addEventListener("keydown", preventDefaultKeys, false);
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
-      window.removeEvListener("touch", preventDefault);
+      window.removeEvListener("touchmove", preventDefault);
       window.removeEvListener("keydown", preventDefaultKeys);
     };
     // }, 3000);
