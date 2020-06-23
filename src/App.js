@@ -186,7 +186,7 @@ function App() {
     window.addEventListener("wheel", preventDefault, {
       passive: false,
     }); // modern desktop
-    window.addEventListener("touchmove", preventDefault); // mobile
+    window.addEventListener("touchmove", preventDefault, false); // mobile
     window.addEventListener("keydown", preventDefaultKeys, false);
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
