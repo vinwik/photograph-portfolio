@@ -100,6 +100,59 @@ function App() {
     }
   };
 
+  const handleWheel = (e) => {
+    const position = window.pageYOffset;
+    console.log(position);
+
+    const height = window.innerHeight;
+
+    if (position >= 0 && position < 30 && scrollPosition < 1 && e.deltaY > 0) {
+      // setTimeout(() => {
+      window.scrollTo({
+        top: height * 1,
+        behavior: "smooth",
+      });
+    } else if (position > height - 50 && position < height && e.deltaY > 0) {
+      window.scrollTo({
+        top: height,
+        behavior: "smooth",
+      });
+    } else if (
+      position > height + 30 &&
+      position < height + 70 &&
+      scrollPosition < 2 &&
+      e.deltaY > 0
+    ) {
+      // setTimeout(() => {
+      window.scrollTo({
+        top: height * 2,
+        behavior: "smooth",
+      });
+      // }, 100);
+    }
+    if (position <= height * 2 && position > height * 2 - 30 && e.deltaY < -2) {
+      window.scrollTo({
+        top: height,
+        behavior: "smooth",
+      });
+    } else if (position < height + 50 && position > height && e.deltaY < 2) {
+      window.scrollTo({
+        top: height,
+        behavior: "smooth",
+      });
+    } else if (
+      position < height - 30 &&
+      position > height - 70 &&
+      e.deltaY < -2
+    ) {
+      // setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      // });
+    }
+  };
   // const handleWheel = (e) => {
   //   if (e.deltaY > 0) {
   //     setTimeout(() => {
@@ -177,20 +230,23 @@ function App() {
     // }
     setIntroEnded(true);
     setIndex(0);
+    window.addEventListener("wheel", handleWheel, {
+      passive: false,
+    });
     // window.addEventListener("wheel", preventDefault, {
     //   passive: false,
     // });
     // window.addEventListener("touch", preventDefault, {
     //   passive: false,
     // });
-    window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
-    window.addEventListener("wheel", preventDefault, {
-      passive: false,
-    }); // modern desktop
+    // window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
+    // window.addEventListener("wheel", preventDefault, {
+    // passive: false,
+    // }); // modern desktop
     // window.addEventListener("touchmove", preventDefault, {
     //   passive: false,
     // }); // mobile
-    window.addEventListener("keydown", preventDefaultKeys, false);
+    // window.addEventListener("keydown", preventDefaultKeys, false);
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
@@ -324,92 +380,92 @@ function App() {
             })}
           </SectionIndicatorContainer>
         </Container>
-        <ScrollableAnchor id="about">
-          <Container
-            style={AnimatedBgGradient}
-            opacity={opacity}
-            index={index}
-            isExpanded={isExpanded}
-            onClick={() => isExpanded && setIsExpanded(false)}
-          >
+        {/* <ScrollableAnchor id="about"> */}
+        <Container
+          style={AnimatedBgGradient}
+          opacity={opacity}
+          index={index}
+          isExpanded={isExpanded}
+          onClick={() => isExpanded && setIsExpanded(false)}
+        >
+          {slides.map((slide, i) => {
+            return (
+              <>
+                <ImageWrapper
+                  opacity={opacity}
+                  isCurrent={index === i}
+                ></ImageWrapper>
+
+                <DescriptionContainer>
+                  <DescriptionTitle isCurrent={index === i}>
+                    {slide.page}
+                  </DescriptionTitle>
+                  <DescriptionSubtitle>Photography</DescriptionSubtitle>
+                </DescriptionContainer>
+              </>
+            );
+          })}
+
+          <SectionIndicatorContainer>
             {slides.map((slide, i) => {
               return (
-                <>
-                  <ImageWrapper
-                    opacity={opacity}
+                <SectionIndicatorWrapper>
+                  <SectionIndicatorNumber>
+                    {"0" + slide.id}
+                  </SectionIndicatorNumber>
+                  <SectionIndicatorBullet
+                    onClick={() => setIndex(i)}
                     isCurrent={index === i}
-                  ></ImageWrapper>
-
-                  <DescriptionContainer>
-                    <DescriptionTitle isCurrent={index === i}>
-                      {slide.page}
-                    </DescriptionTitle>
-                    <DescriptionSubtitle>Photography</DescriptionSubtitle>
-                  </DescriptionContainer>
-                </>
+                  />
+                </SectionIndicatorWrapper>
               );
             })}
+          </SectionIndicatorContainer>
+        </Container>
+        {/* </ScrollableAnchor> */}
+        {/* <ScrollableAnchor id="contact"> */}
+        <Container
+          style={AnimatedBgGradient}
+          opacity={opacity}
+          index={index}
+          isExpanded={isExpanded}
+          onClick={() => isExpanded && setIsExpanded(false)}
+        >
+          {slides.map((slide, i) => {
+            return (
+              <>
+                <ImageWrapper
+                  opacity={opacity}
+                  isCurrent={index === i}
+                ></ImageWrapper>
 
-            <SectionIndicatorContainer>
-              {slides.map((slide, i) => {
-                return (
-                  <SectionIndicatorWrapper>
-                    <SectionIndicatorNumber>
-                      {"0" + slide.id}
-                    </SectionIndicatorNumber>
-                    <SectionIndicatorBullet
-                      onClick={() => setIndex(i)}
-                      isCurrent={index === i}
-                    />
-                  </SectionIndicatorWrapper>
-                );
-              })}
-            </SectionIndicatorContainer>
-          </Container>
-        </ScrollableAnchor>
-        <ScrollableAnchor id="contact">
-          <Container
-            style={AnimatedBgGradient}
-            opacity={opacity}
-            index={index}
-            isExpanded={isExpanded}
-            onClick={() => isExpanded && setIsExpanded(false)}
-          >
+                <DescriptionContainer>
+                  <DescriptionTitle isCurrent={index === i}>
+                    {slide.page}
+                  </DescriptionTitle>
+                  <DescriptionSubtitle>Photography</DescriptionSubtitle>
+                </DescriptionContainer>
+              </>
+            );
+          })}
+
+          <SectionIndicatorContainer>
             {slides.map((slide, i) => {
               return (
-                <>
-                  <ImageWrapper
-                    opacity={opacity}
+                <SectionIndicatorWrapper>
+                  <SectionIndicatorNumber>
+                    {"0" + slide.id}
+                  </SectionIndicatorNumber>
+                  <SectionIndicatorBullet
+                    onClick={() => setIndex(i)}
                     isCurrent={index === i}
-                  ></ImageWrapper>
-
-                  <DescriptionContainer>
-                    <DescriptionTitle isCurrent={index === i}>
-                      {slide.page}
-                    </DescriptionTitle>
-                    <DescriptionSubtitle>Photography</DescriptionSubtitle>
-                  </DescriptionContainer>
-                </>
+                  />
+                </SectionIndicatorWrapper>
               );
             })}
-
-            <SectionIndicatorContainer>
-              {slides.map((slide, i) => {
-                return (
-                  <SectionIndicatorWrapper>
-                    <SectionIndicatorNumber>
-                      {"0" + slide.id}
-                    </SectionIndicatorNumber>
-                    <SectionIndicatorBullet
-                      onClick={() => setIndex(i)}
-                      isCurrent={index === i}
-                    />
-                  </SectionIndicatorWrapper>
-                );
-              })}
-            </SectionIndicatorContainer>
-          </Container>
-        </ScrollableAnchor>
+          </SectionIndicatorContainer>
+        </Container>
+        {/* </ScrollableAnchor> */}
       </Body>
     </>
   );
@@ -420,7 +476,8 @@ export default App;
 const GlobalStyle = createGlobalStyle`
   body{
   /* scroll-snap-type: y mandatory; */
-  scroll-snap-type: ${(props) => (props.isScrolling ? "none" : "y mandatory")}
+  /* scroll-snap-type: ${(props) =>
+    props.isScrolling ? "none" : "y mandatory"} */
   }
 `;
 
@@ -556,7 +613,9 @@ const Container = styled(animated.div)`
   transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
   background: radial-gradient(ellipse at 50%, #4a2d18 0%, #1d1810 60%);
   box-shadow: 10px 10px 30px #00000080;
-  transition: transform 0.6s ease-in-out;
+  box-shadow: ${(props) =>
+    props.isExpanded ? "10px 10px 30px #00000080" : "none"};
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out;
 
   &:after {
     content: "";
@@ -631,6 +690,7 @@ const SectionIndicatorBullet = styled.div`
 `;
 const DescriptionContainer = styled.div`
   grid-column-start: 1;
+  grid-column-end: 3;
   grid-row-start: 3;
   /* margin-top: calc(-1vh - 2.8em); */
   /* align-self: flex-end;
