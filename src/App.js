@@ -426,7 +426,7 @@ const GlobalStyle = createGlobalStyle`
 
 const Body = styled(animated.div)`
   /* height: ${(props) => (props.isExpanded ? "300vh" : "100vh")}; */
-  height: 300vh;
+  min-height: 300vh;
   scroll-behavior: smooth;
   width: 100%;
   opacity: ${(props) => (props.introEnded ? 1 : 0)};
@@ -544,7 +544,7 @@ const ImageRight = styled.img`
 `;
 
 const Container = styled(animated.div)`
-  height: 100vh;
+  min-height: 100vh;
   padding: 0 3rem;
   scroll-snap-align: center;
   display: grid;
