@@ -470,6 +470,7 @@ const ImageRight = styled.img`
 
 const Container = styled(animated.div)`
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   padding: 0 3rem;
   scroll-snap-align: center;
   display: grid;
