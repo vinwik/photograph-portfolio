@@ -395,12 +395,13 @@ const NavBar = styled.div`
 `;
 
 const MenuList = styled.ul`
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
+  bottom: 0;
   padding: 3em;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
+  /* min-height: 100vh;
+  min-height: -webkit-fill-available; */
   display: flex;
   flex-direction: column;
   justify-content: center;
