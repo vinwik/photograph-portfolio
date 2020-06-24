@@ -51,23 +51,26 @@ function App() {
 
   const [scrollPosition, setScrollPosition] = useState(0);
 
+  const handleLoaded = () => {
+    totalImages.current++;
+    if (totalImages.current === 6) {
+      setOpacity(1);
+    }
+  };
+
   const handleScroll = () => {
     const position = window.pageYOffset;
     const height = window.innerHeight;
 
     if (position < height * 0.5) {
       setScrollPosition(0);
+      sessionStorage.setItem("scrollPosition", "0");
     } else if (position < height * 1.5) {
       setScrollPosition(1);
+      sessionStorage.setItem("scrollPosition", "1");
     } else {
       setScrollPosition(2);
-    }
-  };
-
-  const handleLoaded = () => {
-    totalImages.current++;
-    if (totalImages.current === 6) {
-      setOpacity(1);
+      sessionStorage.setItem("scrollPosition", "2");
     }
   };
 
@@ -106,13 +109,22 @@ function App() {
   useEffect(() => {
     setIntroEnded(true);
     setIndex(0);
-
-    window.addEventListener("wheel", preventDefault, {
-      passive: false,
+    window.scrollTo({
+      behavior: "smooth",
+      top: `${
+        Number(sessionStorage.getItem("scrollPosition")) * window.innerHeight ||
+        0
+      }`,
     });
-    window.addEventListener("DOMMouseScroll", preventDefault, false);
 
-    window.addEventListener("keydown", preventDefaultKeys, false);
+    // window.scrollTo(0, Number(sessionStorage.getItem("scrollPosition")) || 0);
+
+    // window.addEventListener("wheel", preventDefault, {
+    //   passive: false,
+    // });
+    // window.addEventListener("DOMMouseScroll", preventDefault, false);
+
+    // window.addEventListener("keydown", preventDefaultKeys, false);
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
@@ -131,7 +143,7 @@ function App() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isExpanded]);
+  }, []);
 
   return (
     <>
@@ -145,7 +157,13 @@ function App() {
         </LogoWrapper>
         <Menu>
           <h2
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => {
+              window.scrollTo({
+                behavior: "smooth",
+                top: window.innerHeight * scrollPosition,
+              });
+              setIsExpanded(!isExpanded);
+            }}
             style={{ lineHeight: 1, cursor: "pointer" }}
           >
             Menu
@@ -350,11 +368,24 @@ function App() {
 export default App;
 
 const GlobalStyle = createGlobalStyle`
+*{
+  /*FireFox*/
+/* scrollbar-width: none; */
+  /*IE10+*/
+  /* -ms-overflow-style: -ms-autohiding-scrollbar; */
+
+/* &::-webkit-scrollbar { */
+  /*Chrome, Safari, Edge*/
+  /* display: none; */
+  /* } */
+}
 html {
-overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")}
+overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
+
 }
   body{
-    background: ${(props) => bgSolidDark[props.index]};
+    background: ${(props) =>
+      props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
   /* scroll-snap-type: y mandatory; */
   /* scroll-snap-type: ${(props) =>
     props.isScrolling ? "none" : "y mandatory"} */
@@ -415,6 +446,10 @@ const NavBar = styled.div`
   opacity: ${(props) => (props.introEnded ? 1 : 0)};
   transition: opacity 1s ease-in-out;
   z-index: 10;
+
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    height: 60px;
+  }
 `;
 
 const MenuList = styled.ul`
@@ -441,11 +476,11 @@ const MenuList = styled.ul`
     padding: 0 3em 3em 0;
     /* width: 100%; */
     /* background: ${(props) => bgSolid[props.index] + "99"}; */
-    opacity: ${(props) => (props.isExpanded ? 1 : 0)};
-    transition: ${(props) =>
+    /* opacity: ${(props) => (props.isExpanded ? 1 : 0)}; */
+    /* transition: ${(props) =>
       props.isExpanded
         ? "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0s"
-        : "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0.6s"};
+        : "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0.6s"}; */
     /* transition: opacity 0.6s ease-in-out 0.6s, transform 0.6s ease-in-out 0s */
     /* filter: blur(5px); */
     /* padding: ${window.innerWidth * 0.1}; */
@@ -471,7 +506,7 @@ const MenuItem = styled.h1`
 `;
 
 const LogoWrapper = styled.div`
-  height: 40px;
+  height: 40%;
   svg {
     height: 100%;
     width: auto;
@@ -481,15 +516,16 @@ const Menu = styled.div``;
 
 const ImageLeft = styled.img`
   max-height: 60vh;
-  max-width: 49%;
-  margin-right: 4px;
+  max-width: calc(50% - 2px);
+  margin-right: 2px;
   transform: translateY(-10%);
   transition: transform 0.6s ease-in-out;
   box-shadow: 0 0 20px #00000070;
 `;
 const ImageRight = styled.img`
   max-height: 60vh;
-  max-width: 49%;
+  max-width: calc(50% - 2px);
+  margin-left: 2px;
   transform: translateY(10%);
   transition: transform 0.6s ease-in-out;
   box-shadow: 0 0 20px #00000070;
@@ -567,14 +603,29 @@ const SectionIndicatorContainer = styled.div`
       margin-bottom: 0;
     }
   }
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    & > div {
+      margin-bottom: 1em;
+    }
+  }
 `;
 const SectionIndicatorWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    flex-direction: row-reverse;
+  }
 `;
 const SectionIndicatorNumber = styled.p`
   cursor: default;
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    /* justify-self: flex-end; */
+    /* margin-left: 0; */
+  }
 `;
 const SectionIndicatorBullet = styled.div`
   height: 1em;
@@ -588,11 +639,29 @@ const SectionIndicatorBullet = styled.div`
   &:hover {
     transform: scale(1.5);
   }
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    margin-left: 0;
+    margin-right: 1.5em;
+  }
 `;
 const DescriptionContainer = styled.div`
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 3;
+
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    grid-column-start: 2;
+    /* grid-column-end: 3; */
+    grid-row-start: 1;
+    /* align-self: flex-end; */
+    /* justify-self: center; */
+    margin-top: 60px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 5;
+  }
 `;
 const DescriptionTitle = styled.h1`
   font-size: 2.8em;
@@ -601,10 +670,17 @@ const DescriptionTitle = styled.h1`
   opacity: ${(props) => (props.isCurrent ? 1 : 0)};
   transition: opacity 0.6s ease-in-out;
   transition-delay: 1s;
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    font-size: 2em;
+  }
 `;
 const DescriptionSubtitle = styled.p`
   font-size: 2em;
   line-height: 1;
   padding-left: 2em;
   cursor: default;
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    padding-left: 0;
+    font-size: 1.8em;
+  }
 `;
