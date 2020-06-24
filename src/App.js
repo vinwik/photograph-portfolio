@@ -3,17 +3,12 @@ import styled, { createGlobalStyle } from "styled-components";
 import { ReactComponent as Logo } from "./assets/jfr-logo.svg";
 import { ReactComponent as LogoIntro } from "./assets/jfr-logo-intro.svg";
 import { useSpring, animated } from "react-spring";
-// import "scroll-behavior-polyfill";
 import { polyfill } from "smoothscroll-polyfill";
 
-// kick off the polyfill!
-
-// import ScrollableAnchor from "react-scrollable-anchor";
 import { configureAnchors } from "react-scrollable-anchor";
 polyfill();
 
 configureAnchors({ offset: -window.innerHeight * 0.2 });
-// configureAnchors({ offset: -100 });
 
 const slides = [
   {
@@ -37,6 +32,7 @@ const slides = [
 ];
 
 const bgSolid = ["#4a2d18", "#183847", "#194617"];
+const bgSolidDark = ["#1d1810", "#111A1D", "#111F11"];
 
 const bgGradient = [
   "radial-gradient(ellipse at 50%, #4a2d18 0%, #1d1810 60%)",
@@ -51,7 +47,6 @@ function App() {
   const [introEnded, setIntroEnded] = useState(false);
   const [opacity, setOpacity] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
   const totalImages = useRef(0);
 
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -59,38 +54,14 @@ function App() {
   const handleScroll = () => {
     const position = window.pageYOffset;
     const height = window.innerHeight;
-    // console.log(position);
-    // console.log(height);
 
-    // setSrollPosition(position);
-    // if (isExpanded) {
     if (position < height * 0.5) {
       setScrollPosition(0);
-      // console.log("about");
     } else if (position < height * 1.5) {
       setScrollPosition(1);
     } else {
       setScrollPosition(2);
     }
-
-    // else if (position < height * 2) {
-    //   window.scrollTo({
-    //     behavior: "smooth",
-    //     top: height,
-    //   });
-    // } else {
-    //   window.scrollTo({
-    //     behavior: "smooth",
-    //     top: height * 2,
-    //   });
-    // }
-    // }
-    // setTimeout(() => {
-    //   window.scrollTo({
-    //     behavior: "smooth",
-    //     top: window.innerHeight * scrollPosition,
-    //   })
-    // }, 0);
   };
 
   const handleLoaded = () => {
@@ -99,95 +70,6 @@ function App() {
       setOpacity(1);
     }
   };
-
-  const handleWheel = (e) => {
-    const position = window.pageYOffset;
-    console.log(position);
-
-    const height = window.innerHeight;
-
-    if (position >= 0 && position < 30 && scrollPosition < 1 && e.deltaY > 0) {
-      // setTimeout(() => {
-      window.scrollTo({
-        top: height * 1,
-        behavior: "smooth",
-      });
-    } else if (position > height - 50 && position < height && e.deltaY > 0) {
-      window.scrollTo({
-        top: height,
-        behavior: "smooth",
-      });
-    } else if (
-      position > height + 30 &&
-      position < height + 70 &&
-      scrollPosition < 2 &&
-      e.deltaY > 0
-    ) {
-      // setTimeout(() => {
-      window.scrollTo({
-        top: height * 2,
-        behavior: "smooth",
-      });
-      // }, 100);
-    }
-    if (position <= height * 2 && position > height * 2 - 30 && e.deltaY < -2) {
-      window.scrollTo({
-        top: height,
-        behavior: "smooth",
-      });
-    } else if (position < height + 50 && position > height && e.deltaY < 2) {
-      window.scrollTo({
-        top: height,
-        behavior: "smooth",
-      });
-    } else if (
-      position < height - 30 &&
-      position > height - 70 &&
-      e.deltaY < -2
-    ) {
-      // setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-      // });
-    }
-  };
-  // const handleWheel = (e) => {
-  //   if (e.deltaY > 0) {
-  //     setTimeout(() => {
-  //       setIndex(index + 1);
-  //     }, 0);
-  //   }
-  //   if (e.deltaY < 0) {
-  //     setIndex(index - 1);
-  //   }
-
-  //   if (index > 2) {
-  //     setIndex(0);
-  //   }
-  //   if (index < 0) {
-  //     setIndex(2);
-  //   }
-  // };
-
-  // const handleKey = (e) => {
-  //   // setTimeout(() => {
-  //   if (e.keyCode === 40 && index < 2) {
-  //     // console.log(indexRef.current);
-  //     setIndex(index + 1);
-  //   }
-  //   if (e.keyCode === 40 && index === 2) {
-  //     setIndex(0);
-  //   }
-  //   // }, 1000);
-
-  //   if (e.keyCode === 38 && index > 0) {
-  //     setIndex(index - 1);
-  //   } else if (e.keyCode === 38) {
-  //     setIndex(2);
-  //   }
-  // };
 
   const AnimatedBgGradient = useSpring(
     index !== null &&
@@ -209,7 +91,6 @@ function App() {
 
   const preventDefault = (e) => {
     e.preventDefault();
-    e.stopPropagation();
   };
   // left: 37, up: 38, right: 39, down: 40,
   // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
@@ -223,37 +104,20 @@ function App() {
   };
 
   useEffect(() => {
-    // window.scrollTo({ top: window.innerHeight });
-    // setTimeout(() => {
-    // if ((window.pageYOffset = window.innerHeight - window.innerHeight * 0.2)) {
-    //   window.scrollBy(0, window.innerHeight * 0.2);
-    // }
     setIntroEnded(true);
     setIndex(0);
-    window.addEventListener("wheel", handleWheel, {
+
+    window.addEventListener("wheel", preventDefault, {
       passive: false,
     });
-    // window.addEventListener("wheel", preventDefault, {
-    //   passive: false,
-    // });
-    // window.addEventListener("touch", preventDefault, {
-    //   passive: false,
-    // });
-    // window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
-    // window.addEventListener("wheel", preventDefault, {
-    // passive: false,
-    // }); // modern desktop
-    // window.addEventListener("touchmove", preventDefault, {
-    //   passive: false,
-    // }); // mobile
-    // window.addEventListener("keydown", preventDefaultKeys, false);
+    window.addEventListener("DOMMouseScroll", preventDefault, false);
+
+    window.addEventListener("keydown", preventDefaultKeys, false);
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
-      // window.removeEvListener("touchmove", preventDefault);
       window.removeEvListener("keydown", preventDefaultKeys);
     };
-    // }, 3000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -272,7 +136,7 @@ function App() {
 
   return (
     <>
-      <GlobalStyle isScrolling={isScrolling} />
+      <GlobalStyle index={index} />
       <Intro introEnded={introEnded}>
         <LogoIntro />
       </Intro>
@@ -287,17 +151,15 @@ function App() {
           >
             Menu
           </h2>
-          <MenuList isExpanded={isExpanded}>
+          <MenuList index={index} isExpanded={isExpanded}>
             {menuItems.map((item, index) => {
               return (
                 <MenuItem
                   active={scrollPosition === index}
                   onClick={() => {
                     setScrollPosition(index);
-                    setIsScrolling(true);
                     window.scrollTo({
                       behavior: "smooth",
-                      // left: 0,
                       top: window.innerHeight * index,
                     });
 
@@ -306,12 +168,10 @@ function App() {
                       : scrollPosition - index === 1 || -1
                       ? setTimeout(() => {
                           setIsExpanded(false);
-                          // setIsScrolling(false);
                         }, 600)
                       : setTimeout(() => {
                           setIsExpanded(false);
-                          // setIsScrolling(false);
-                        }, 800);
+                        }, 1000);
                   }}
                 >
                   {item}
@@ -380,9 +240,8 @@ function App() {
             })}
           </SectionIndicatorContainer>
         </Container>
-        {/* <ScrollableAnchor id="about"> */}
         <Container
-          style={AnimatedBgGradient}
+          style={{ background: bgSolidDark[index] }}
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
@@ -422,10 +281,8 @@ function App() {
             })}
           </SectionIndicatorContainer>
         </Container>
-        {/* </ScrollableAnchor> */}
-        {/* <ScrollableAnchor id="contact"> */}
         <Container
-          style={AnimatedBgGradient}
+          style={{ background: bgSolidDark[index] }}
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
@@ -465,7 +322,6 @@ function App() {
             })}
           </SectionIndicatorContainer>
         </Container>
-        {/* </ScrollableAnchor> */}
       </Body>
     </>
   );
@@ -475,6 +331,7 @@ export default App;
 
 const GlobalStyle = createGlobalStyle`
   body{
+    background: ${(props) => bgSolidDark[props.index]};
   /* scroll-snap-type: y mandatory; */
   /* scroll-snap-type: ${(props) =>
     props.isScrolling ? "none" : "y mandatory"} */
@@ -482,20 +339,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Body = styled(animated.div)`
-  /* height: ${(props) => (props.isExpanded ? "300vh" : "100vh")}; */
   min-height: 300vh;
   scroll-behavior: smooth;
   width: 100%;
   opacity: ${(props) => (props.introEnded ? 1 : 0)};
-  /* transform: ${(props) =>
-    props.isExpanded
-      ? "translateY(0)"
-      : `translateY(-${props.scrollPosition * 100}vh)`}; */
-  /* margin-top: ${(props) =>
-    props.isExpanded ? 0 : props.scrollPosition + "vh"}; */
   transition: opacity 1s ease-in-out 0.8s;
-  /* transition-delay: 0.8s; */
-  /* overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")}; */
 `;
 const Intro = styled.div`
   position: fixed;
@@ -561,6 +409,21 @@ const MenuList = styled.ul`
   transition: transform 0.6s ease-in-out;
   transform: ${(props) =>
     props.isExpanded ? "translateX(0)" : "translateX(100%)"};
+
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    justify-content: flex-end;
+    width: 100%;
+    background: ${(props) => bgSolid[props.index] + "99"};
+    opacity: ${(props) => (props.isExpanded ? 1 : 0)};
+    transition: ${(props) =>
+      props.isExpanded
+        ? "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0s"
+        : "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0.6s"};
+    /* transition: opacity 0.6s ease-in-out 0.6s, transform 0.6s ease-in-out 0s */
+    /* filter: blur(5px); */
+    /* padding: ${window.innerWidth * 0.1}; */
+    /* font-size: 1.4em; */
+  }
 `;
 
 const MenuItem = styled.h1`
@@ -571,6 +434,13 @@ const MenuItem = styled.h1`
   &:hover {
     opacity: ${(props) => (props.active ? 1 : 0.7)};
   }
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    /* color: ${(props) => (props.active ? "#fff" : "#888")}; */
+    /* opacity: 1; */
+    opacity: ${(props) => (props.active ? 1 : 0.5)};
+    /* transition: color 0.6s ease-in-out; */
+    text-shadow: 2px 2px 10px #00000090;
+  }
 `;
 
 const LogoWrapper = styled.div`
@@ -580,9 +450,7 @@ const LogoWrapper = styled.div`
     width: auto;
   }
 `;
-const Menu = styled.div`
-  /* line-height: 1; */
-`;
+const Menu = styled.div``;
 
 const ImageLeft = styled.img`
   max-height: 60vh;
@@ -606,7 +474,6 @@ const Container = styled(animated.div)`
   scroll-snap-align: center;
   display: grid;
   overflow: hidden;
-  /* grid-template-columns: 33% 34% 33%; */
   grid-template-columns: 1fr 2fr 1fr;
   grid-template-rows: 25% 50% 25%;
   opacity: ${(props) => props.opacity};
@@ -616,6 +483,10 @@ const Container = styled(animated.div)`
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out;
+
+  @media screen and (orientation: portrait), (max-width: 900px) {
+    transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
+  }
 
   &:after {
     content: "";
@@ -692,9 +563,6 @@ const DescriptionContainer = styled.div`
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 3;
-  /* margin-top: calc(-1vh - 2.8em); */
-  /* align-self: flex-end;
-  padding-bottom: 3em; */
 `;
 const DescriptionTitle = styled.h1`
   font-size: 2.8em;
