@@ -10,10 +10,6 @@
       user-select: none;
 }
 
-html {
-  overflow: hidden;
-}
-
 @media only screen and (max-width: 500px) {
   html {
     font-size: 12px;
