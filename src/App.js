@@ -339,7 +339,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Body = styled(animated.div)`
-  min-height: 300vh;
+  /* min-height: 300vh; */
   scroll-behavior: smooth;
   width: 100%;
   opacity: ${(props) => (props.introEnded ? 1 : 0)};
