@@ -399,7 +399,8 @@ const MenuList = styled.ul`
   top: 0;
   right: 0;
   padding: 3em;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   justify-content: center;
