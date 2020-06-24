@@ -47,6 +47,8 @@ function App() {
   const [introEnded, setIntroEnded] = useState(false);
   const [opacity, setOpacity] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const totalImages = useRef(0);
 
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -91,6 +93,14 @@ function App() {
       config: { mass: 5, tension: 50, friction: 14 },
     }
   );
+  const AnimatedBgSolidDark = useSpring(
+    index !== null && {
+      to: { background: bgSolidDark[index] },
+      from: { background: bgSolidDark[index] },
+      delay: 1000,
+      config: { mass: 5, tension: 50, friction: 14 },
+    }
+  );
 
   const preventDefault = (e) => {
     e.preventDefault();
@@ -125,10 +135,17 @@ function App() {
     // window.addEventListener("DOMMouseScroll", preventDefault, false);
 
     // window.addEventListener("keydown", preventDefaultKeys, false);
+    window.addEventListener("resize", () => {
+      // if (window.innerWidth !== windowWidth) {
+      setWindowHeight(window.innerHeight);
+      setWindowWidth(window.innerWidth);
+      // }
+    });
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
       window.removeEvListener("keydown", preventDefaultKeys);
+      window.addEventListener("resize");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -168,7 +185,11 @@ function App() {
           >
             Menu
           </h2>
-          <MenuList index={index} isExpanded={isExpanded}>
+          <MenuList
+            index={index}
+            isExpanded={isExpanded}
+            windowHeight={windowHeight}
+          >
             {menuItems.map((item, index) => {
               return (
                 <MenuItem
@@ -211,6 +232,7 @@ function App() {
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
+          windowHeight={windowHeight}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -265,10 +287,12 @@ function App() {
           </SectionIndicatorContainer>
         </Container>
         <Container
-          style={{ background: bgSolidDark[index] }}
+          // style={{ background: bgSolidDark[index] }}
+          style={AnimatedBgSolidDark}
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
+          windowHeight={windowHeight}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -313,10 +337,12 @@ function App() {
           </SectionIndicatorContainer>
         </Container>
         <Container
-          style={{ background: bgSolidDark[index] }}
+          // style={{ background: bgSolidDark[index] }}
+          style={AnimatedBgSolidDark}
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
+          windowHeight={windowHeight}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -381,11 +407,17 @@ const GlobalStyle = createGlobalStyle`
 }
 html {
 overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
-
+  /* width: 100vw; */
 }
   body{
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
+      /* width: 120%; */
+      /* transition: background 0.6s ease-in-out 1.2s; */
+  transition: ${(props) =>
+    props.isExpanded
+      ? "background 0.05s ease-in-out"
+      : "background 0.6s ease-in-out 1.2s"};
   /* scroll-snap-type: y mandatory; */
   /* scroll-snap-type: ${(props) =>
     props.isScrolling ? "none" : "y mandatory"} */
@@ -447,16 +479,16 @@ const NavBar = styled.div`
   transition: opacity 1s ease-in-out;
   z-index: 10;
 
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     height: 60px;
   }
 `;
 
 const MenuList = styled.ul`
   position: fixed;
-  /* top: 0; */
+  top: 0;
   right: 0;
-  bottom: 0;
+  /* bottom: 0; */
   padding: 3em;
   min-height: 100vh;
   /* min-height: -webkit-fill-available; */
@@ -466,13 +498,16 @@ const MenuList = styled.ul`
   align-items: flex-end;
   z-index: -1;
   transform: translateX(100%);
-  transition: transform 0.6s ease-in-out;
+  transition: transform 0.6s ease-in-out, height 1s ease;
   transform: ${(props) =>
     props.isExpanded ? "translateX(0)" : "translateX(100%)"};
 
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     justify-content: flex-end;
     min-height: unset;
+    /* height: 90vh; */
+    height: ${(props) => props.windowHeight + "px"};
+
     padding: 0 3em 3em 0;
     /* width: 100%; */
     /* background: ${(props) => bgSolid[props.index] + "99"}; */
@@ -496,7 +531,7 @@ const MenuItem = styled.h1`
   &:hover {
     opacity: ${(props) => (props.active ? 1 : 0.7)};
   }
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     /* color: ${(props) => (props.active ? "#fff" : "#888")}; */
     /* opacity: 1; */
     opacity: ${(props) => (props.active ? 1 : 0.5)};
@@ -532,8 +567,9 @@ const ImageRight = styled.img`
 `;
 
 const Container = styled(animated.div)`
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
+  height: ${(props) => props.windowHeight + "px"};
+  /* min-height: 100vh; */
+  /* min-height: -webkit-fill-available; */
   padding: 0 3rem;
   scroll-snap-align: center;
   display: grid;
@@ -547,9 +583,9 @@ const Container = styled(animated.div)`
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
-    opacity 0.6s ease-in-out;
+    height 1s ease, opacity 0.6s ease-in-out;
 
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
   }
@@ -603,7 +639,7 @@ const SectionIndicatorContainer = styled.div`
       margin-bottom: 0;
     }
   }
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     grid-column-start: 1;
     grid-column-end: 3;
     grid-row-start: 3;
@@ -616,13 +652,13 @@ const SectionIndicatorWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     flex-direction: row-reverse;
   }
 `;
 const SectionIndicatorNumber = styled.p`
   cursor: default;
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     /* justify-self: flex-end; */
     /* margin-left: 0; */
   }
@@ -639,7 +675,7 @@ const SectionIndicatorBullet = styled.div`
   &:hover {
     transform: scale(1.5);
   }
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     margin-left: 0;
     margin-right: 1.5em;
   }
@@ -649,7 +685,7 @@ const DescriptionContainer = styled.div`
   grid-column-end: 3;
   grid-row-start: 3;
 
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     grid-column-start: 2;
     /* grid-column-end: 3; */
     grid-row-start: 1;
@@ -670,7 +706,7 @@ const DescriptionTitle = styled.h1`
   opacity: ${(props) => (props.isCurrent ? 1 : 0)};
   transition: opacity 0.6s ease-in-out;
   transition-delay: 1s;
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     font-size: 2em;
   }
 `;
@@ -679,7 +715,7 @@ const DescriptionSubtitle = styled.p`
   line-height: 1;
   padding-left: 2em;
   cursor: default;
-  @media screen and (orientation: portrait), (max-width: 900px) {
+  @media screen and (orientation: portrait), (max-width: 600px) {
     padding-left: 0;
     font-size: 1.8em;
   }
