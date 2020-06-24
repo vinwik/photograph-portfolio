@@ -396,12 +396,12 @@ const NavBar = styled.div`
 
 const MenuList = styled.ul`
   position: fixed;
-  top: 0;
+  /* top: 0; */
   right: 0;
-  /* bottom: 0; */
+  bottom: 0;
   padding: 3em;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  /* min-height: -webkit-fill-available; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -414,8 +414,10 @@ const MenuList = styled.ul`
 
   @media screen and (orientation: portrait), (max-width: 900px) {
     justify-content: flex-end;
-    width: 100%;
-    background: ${(props) => bgSolid[props.index] + "99"};
+    min-height: unset;
+    padding: 0 3em 3em 0;
+    /* width: 100%; */
+    /* background: ${(props) => bgSolid[props.index] + "99"}; */
     opacity: ${(props) => (props.isExpanded ? 1 : 0)};
     transition: ${(props) =>
       props.isExpanded
@@ -485,10 +487,12 @@ const Container = styled(animated.div)`
   box-shadow: 10px 10px 30px #00000080;
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
-  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out;
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
+    opacity 0.6s ease-in-out;
 
   @media screen and (orientation: portrait), (max-width: 900px) {
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
+    opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
   }
 
   &:after {
