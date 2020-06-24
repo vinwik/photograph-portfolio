@@ -127,7 +127,7 @@ function App() {
     //   passive: false,
     // });
     // }
-
+    window.scrollTo(0, 1);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -421,7 +421,7 @@ const MenuList = styled.ul`
     opacity: ${(props) => (props.isExpanded ? 1 : 0)};
     transition: ${(props) =>
       props.isExpanded
-        ? "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0s"
+        ? "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0s, "
         : "opacity 0.6s ease-in-out 0s, transform 0s ease-in-out 0.6s"};
     /* transition: opacity 0.6s ease-in-out 0.6s, transform 0.6s ease-in-out 0s */
     /* filter: blur(5px); */
