@@ -104,6 +104,11 @@ function App() {
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      window.addEventListener("load", function () {
+        window.scrollTo(0, 1);
+      });
+    }, 50);
     setIntroEnded(true);
     setIndex(0);
 
@@ -127,7 +132,6 @@ function App() {
     //   passive: false,
     // });
     // }
-    window.scrollTo(0, 1);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
