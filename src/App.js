@@ -135,7 +135,7 @@ function App() {
 
   return (
     <>
-      <GlobalStyle index={index} />
+      <GlobalStyle index={index} isExpanded={isExpanded} />
       <Intro introEnded={introEnded}>
         <LogoIntro />
       </Intro>
@@ -193,7 +193,14 @@ function App() {
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
-          onClick={() => isExpanded && setIsExpanded(false)}
+          onClick={() => {
+            isExpanded &&
+              window.scrollTo({
+                behavior: "smooth",
+                top: 0,
+              });
+            isExpanded && setIsExpanded(false);
+          }}
         >
           {slides.map((slide, i) => {
             return (
@@ -244,7 +251,14 @@ function App() {
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
-          onClick={() => isExpanded && setIsExpanded(false)}
+          onClick={() => {
+            isExpanded &&
+              window.scrollTo({
+                behavior: "smooth",
+                top: window.innerHeight,
+              });
+            isExpanded && setIsExpanded(false);
+          }}
         >
           {slides.map((slide, i) => {
             return (
@@ -285,7 +299,14 @@ function App() {
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
-          onClick={() => isExpanded && setIsExpanded(false)}
+          onClick={() => {
+            isExpanded &&
+              window.scrollTo({
+                behavior: "smooth",
+                top: window.innerHeight * 2,
+              });
+            isExpanded && setIsExpanded(false);
+          }}
         >
           {slides.map((slide, i) => {
             return (
@@ -329,6 +350,9 @@ function App() {
 export default App;
 
 const GlobalStyle = createGlobalStyle`
+html {
+overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")}
+}
   body{
     background: ${(props) => bgSolidDark[props.index]};
   /* scroll-snap-type: y mandatory; */
