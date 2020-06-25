@@ -672,7 +672,7 @@ const SectionIndicatorContainer = styled.div`
 const SectionIndicatorWrapper = styled.div`
   display: flex;
   /* align-items: flex-start; */
-  /* align-items: center; */
+  align-items: center;
   justify-content: flex-end;
   @media screen and (orientation: portrait), (max-width: 600px) {
     /* flex-direction: row-reverse; */
