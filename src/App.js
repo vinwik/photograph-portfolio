@@ -547,6 +547,9 @@ const LogoWrapper = styled.div`
     height: 100%;
     width: auto;
   }
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    height: 45%;
+  }
 `;
 const Menu = styled.div``;
 
@@ -557,6 +560,9 @@ const ImageLeft = styled.img`
   transform: translateY(-10%);
   transition: transform 0.6s ease-in-out;
   box-shadow: 0 0 20px #00000070;
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    max-height: 50vh;
+  }
 `;
 const ImageRight = styled.img`
   max-height: 60vh;
@@ -565,13 +571,16 @@ const ImageRight = styled.img`
   transform: translateY(10%);
   transition: transform 0.6s ease-in-out;
   box-shadow: 0 0 20px #00000070;
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    max-height: 50vh;
+  }
 `;
 
 const Container = styled(animated.div)`
   height: ${(props) => props.windowHeight + "px"};
   /* min-height: 100vh; */
   /* min-height: -webkit-fill-available; */
-  padding: 0 3rem;
+  padding: 0 3em;
   scroll-snap-align: center;
   display: grid;
   overflow: hidden;
