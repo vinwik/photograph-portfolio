@@ -42,6 +42,9 @@ const bgGradient = [
 
 const menuItems = ["WORK", "ABOUT", "CONTACT"];
 
+const supportsNativeSmoothScroll =
+  "scrollBehavior" in document.documentElement.style;
+
 function App() {
   const [index, setIndex] = useState(null);
   const [introEnded, setIntroEnded] = useState(false);
@@ -49,8 +52,10 @@ function App() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [scrollBehaviorSupport] = useState(supportsNativeSmoothScroll);
   const totalImages = useRef(0);
 
+  const [isScrolling, setIsScrolling] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const handleLoaded = () => {
@@ -60,6 +65,27 @@ function App() {
     }
   };
 
+  var isScrollingg;
+
+  function scrollEnd(position) {
+    // Clear our timeout throughout the scroll
+    window.clearTimeout(isScrollingg);
+    setIsScrolling(true);
+
+    // Set a timeout to run after scrolling ends
+    isScrollingg = setTimeout(() => {
+      // Run the callback
+      setIsScrolling(false);
+      window.scrollTo({
+        behavior: "smooth",
+        top: window.innerHeight * position,
+      });
+      // setTimeout(() => {
+      setWindowHeight(window.innerHeight);
+      // }, 0);
+    }, 66);
+  }
+
   const handleScroll = () => {
     const position = window.pageYOffset;
     const height = window.innerHeight;
@@ -67,12 +93,15 @@ function App() {
     if (position < height * 0.5) {
       setScrollPosition(0);
       sessionStorage.setItem("scrollPosition", "0");
+      // scrollEnd(0);
     } else if (position < height * 1.5) {
       setScrollPosition(1);
       sessionStorage.setItem("scrollPosition", "1");
+      // scrollEnd(1);
     } else {
       setScrollPosition(2);
       sessionStorage.setItem("scrollPosition", "2");
+      // scrollEnd(2);
     }
   };
 
@@ -161,6 +190,30 @@ function App() {
     //   passive: false,
     // });
     // }
+    // // Setup isScrolling variable
+    // var isScrollingg;
+
+    // // Listen for scroll events
+    // window.addEventListener(
+    //   "scroll",
+    //   function (event) {
+    //     // Clear our timeout throughout the scroll
+    //     window.clearTimeout(isScrollingg);
+    //     setIsScrolling(true);
+
+    //     // Set a timeout to run after scrolling ends
+    //     isScrollingg = setTimeout(() => {
+    //       // Run the callback
+    //       setIsScrolling(false);
+    //       setWindowHeight(window.innerHeight);
+    //       window.scrollTo({
+    //         behavior: "smooth",
+    //         top: window.innerHeight * scrollPosition,
+    //       });
+    //     }, 66);
+    //   },
+    //   false
+    // );
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -238,6 +291,7 @@ function App() {
           index={index}
           isExpanded={isExpanded}
           windowHeight={windowHeight}
+          scrollBehaviorSupport={scrollBehaviorSupport}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -303,6 +357,8 @@ function App() {
           index={index}
           isExpanded={isExpanded}
           windowHeight={windowHeight}
+          scrollBehaviorSupport={scrollBehaviorSupport}
+          isScrolling={isScrolling}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -353,6 +409,7 @@ function App() {
           index={index}
           isExpanded={isExpanded}
           windowHeight={windowHeight}
+          scrollBehaviorSupport={scrollBehaviorSupport}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -417,7 +474,7 @@ const GlobalStyle = createGlobalStyle`
 }
 html {
 /* overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")}; */
-overflow: hidden;
+/* overflow: hidden; */
   /* width: 100vw; */
 }
   body{
@@ -437,7 +494,7 @@ overflow: hidden;
 
 const Body = styled(animated.div)`
   /* min-height: 300vh; */
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
   width: 100%;
   opacity: ${(props) => (props.introEnded ? 1 : 0)};
   transition: opacity 1s ease-in-out 0.8s;
@@ -603,7 +660,8 @@ const Container = styled(animated.div)`
   /* min-height: 100vh; */
   /* min-height: -webkit-fill-available; */
   padding: 0 3em;
-  scroll-snap-align: center;
+  scroll-snap-align: ${(props) =>
+    props.scrollBehaviorSupport ? "center" : "none"};
   display: grid;
   overflow: hidden;
   grid-template-columns: 1fr 2fr 1fr;
