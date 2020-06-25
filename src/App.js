@@ -473,7 +473,7 @@ const GlobalStyle = createGlobalStyle`
   /* } */
 }
 html {
-/* overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")}; */
+overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
 /* overflow: hidden; */
   /* width: 100vw; */
 }
