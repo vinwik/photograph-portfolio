@@ -245,7 +245,12 @@ function App() {
           {slides.map((slide, i) => {
             return (
               <>
-                <ImageWrapper opacity={opacity} isCurrent={index === i}>
+                <ImageWrapper
+                  opacity={opacity}
+                  isCurrent={index === i}
+                  isPrev={index > i}
+                  isNext={index < i}
+                >
                   <ImageLeft
                     onLoad={() => handleLoaded(slide.left)}
                     src={slide.left}
@@ -563,6 +568,9 @@ const ImageLeft = styled.img`
   @media screen and (orientation: portrait), (max-width: 600px) {
     max-height: 50vh;
   }
+  @media screen and (max-height: 700px) {
+    max-height: 40vh;
+  }
 `;
 const ImageRight = styled.img`
   max-height: 60vh;
@@ -573,6 +581,9 @@ const ImageRight = styled.img`
   box-shadow: 0 0 20px #00000070;
   @media screen and (orientation: portrait), (max-width: 600px) {
     max-height: 50vh;
+  }
+  @media screen and (max-height: 700px) {
+    max-height: 40vh;
   }
 `;
 
@@ -619,7 +630,6 @@ const ImageWrapper = styled.div`
   grid-row-start: 2;
   align-self: center;
   justify-self: center;
-
   transform: ${(props) =>
     props.isCurrent ? "translateY(0%)" : "translateY(-170%)"};
   opacity: ${(props) => (props.isCurrent ? 1 : 0)};
@@ -638,6 +648,23 @@ const ImageWrapper = styled.div`
     ${ImageRight} {
       transform: translateY(0);
       transition-delay: 0s;
+    }
+  }
+
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    /* overflow: hidden; */
+    transform: initial;
+    transform: ${(props) =>
+      props.isCurrent
+        ? "translateX(0%)"
+        : props.isNext
+        ? "translateX(170%)"
+        : "translateX(-170%)"};
+    opacity: ${(props) => (props.isCurrent ? 1 : 0)};
+    /* transition: opacity 1s ease-in-out; */
+    transition-delay: ${(props) => (props.isCurrent ? "0.6s" : "0s")};
+    ${ImageRight} {
+      transform: translateY(10%);
     }
   }
 `;
