@@ -48,7 +48,7 @@ function App() {
   const [opacity, setOpacity] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const totalImages = useRef(0);
 
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -136,10 +136,15 @@ function App() {
 
     // window.addEventListener("keydown", preventDefaultKeys, false);
     window.addEventListener("resize", () => {
-      // if (window.innerWidth !== windowWidth) {
       setWindowHeight(window.innerHeight);
-      // setWindowWidth(window.innerWidth);
-      // }
+      if (
+        window.innerWidth !== windowWidth &&
+        window.innerHeight !== windowHeight
+      ) {
+        window.scrollTo(0, 0);
+        setWindowWidth(window.innerWidth);
+        setWindowHeight(window.innerHeight);
+      }
     });
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
