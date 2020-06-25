@@ -135,12 +135,12 @@ function App() {
     // window.addEventListener("DOMMouseScroll", preventDefault, false);
 
     // window.addEventListener("keydown", preventDefaultKeys, false);
-    // window.addEventListener("resize", () => {
-    // if (window.innerWidth !== windowWidth) {
-    // setWindowHeight(window.innerHeight);
-    // setWindowWidth(window.innerWidth);
-    // }
-    // });
+    window.addEventListener("resize", () => {
+      // if (window.innerWidth !== windowWidth) {
+      setWindowHeight(window.innerHeight);
+      // setWindowWidth(window.innerWidth);
+      // }
+    });
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
