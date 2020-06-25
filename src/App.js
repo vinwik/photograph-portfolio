@@ -135,12 +135,12 @@ function App() {
     // window.addEventListener("DOMMouseScroll", preventDefault, false);
 
     // window.addEventListener("keydown", preventDefaultKeys, false);
-    window.addEventListener("resize", () => {
-      // if (window.innerWidth !== windowWidth) {
-      setWindowHeight(window.innerHeight);
-      // setWindowWidth(window.innerWidth);
-      // }
-    });
+    // window.addEventListener("resize", () => {
+    // if (window.innerWidth !== windowWidth) {
+    // setWindowHeight(window.innerHeight);
+    // setWindowWidth(window.innerWidth);
+    // }
+    // });
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
@@ -406,7 +406,8 @@ const GlobalStyle = createGlobalStyle`
   /* } */
 }
 html {
-overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
+/* overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")}; */
+overflow: hidden;
   /* width: 100vw; */
 }
   body{
@@ -496,7 +497,7 @@ const MenuList = styled.ul`
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  z-index: -1;
+  z-index: -10;
   transform: translateX(100%);
   transition: transform 0.6s ease-in-out, height 1s ease;
   transform: ${(props) =>
@@ -584,8 +585,10 @@ const Container = styled(animated.div)`
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
     height 1s ease, opacity 0.6s ease-in-out;
+  z-index: 100;
 
   @media screen and (orientation: portrait), (max-width: 600px) {
+    grid-template-columns: 1fr 3fr 1fr;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
   }
@@ -641,19 +644,32 @@ const SectionIndicatorContainer = styled.div`
   }
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column-end: 4;
     grid-row-start: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding: 1em;
     & > div {
-      margin-bottom: 1em;
+      margin-bottom: 0;
+      margin-right: 2em;
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 `;
 const SectionIndicatorWrapper = styled.div`
   display: flex;
-  align-items: center;
+  /* align-items: flex-start; */
+  /* align-items: center; */
   justify-content: flex-end;
   @media screen and (orientation: portrait), (max-width: 600px) {
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
+    /* display: none; */
+    /* margin-right: 1.5em; */
+    align-items: flex-start;
   }
 `;
 const SectionIndicatorNumber = styled.p`
@@ -661,9 +677,11 @@ const SectionIndicatorNumber = styled.p`
   @media screen and (orientation: portrait), (max-width: 600px) {
     /* justify-self: flex-end; */
     /* margin-left: 0; */
+    display: none;
   }
 `;
 const SectionIndicatorBullet = styled.div`
+  font-size: 14px;
   height: 1em;
   width: 1em;
   background-color: #fff;
@@ -677,7 +695,6 @@ const SectionIndicatorBullet = styled.div`
   }
   @media screen and (orientation: portrait), (max-width: 600px) {
     margin-left: 0;
-    margin-right: 1.5em;
   }
 `;
 const DescriptionContainer = styled.div`
@@ -691,11 +708,12 @@ const DescriptionContainer = styled.div`
     grid-row-start: 1;
     /* align-self: flex-end; */
     /* justify-self: center; */
-    margin-top: 60px;
+    margin-top: 30px;
     padding: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     z-index: 5;
   }
 `;
