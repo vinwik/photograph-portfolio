@@ -559,6 +559,7 @@ const MenuList = styled.ul`
   /* bottom: 0; */
   padding: 3em;
   min-height: 100vh;
+  pointer-events: none;
   /* min-height: -webkit-fill-available; */
   display: flex;
   flex-direction: column;
@@ -594,6 +595,7 @@ const MenuList = styled.ul`
 const MenuItem = styled.h1`
   opacity: ${(props) => (props.active ? 1 : 0.3)};
   transition: opacity 0.6s ease-in-out;
+  pointer-events: auto;
   cursor: pointer;
 
   &:hover {
