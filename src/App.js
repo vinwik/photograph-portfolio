@@ -571,6 +571,9 @@ const ImageLeft = styled.img`
   @media screen and (max-height: 700px) {
     max-height: 40vh;
   }
+  @media screen and (max-height: 600px) {
+    max-height: 35vh;
+  }
 `;
 const ImageRight = styled.img`
   max-height: 60vh;
@@ -584,6 +587,9 @@ const ImageRight = styled.img`
   }
   @media screen and (max-height: 700px) {
     max-height: 40vh;
+  }
+  @media screen and (max-height: 600px) {
+    max-height: 35vh;
   }
 `;
 
