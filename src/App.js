@@ -462,15 +462,15 @@ export default App;
 
 const GlobalStyle = createGlobalStyle`
 *{
-  /*FireFox*/
-/* scrollbar-width: none; */
+  /* FireFox*/
+scrollbar-width: none;
   /*IE10+*/
-  /* -ms-overflow-style: -ms-autohiding-scrollbar; */
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 
-/* &::-webkit-scrollbar { */
-  /*Chrome, Safari, Edge*/
-  /* display: none; */
-  /* } */
+&::-webkit-scrollbar {
+  /* Chrome, Safari, Edge */
+  display: none;
+  }
 }
 html {
 overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
