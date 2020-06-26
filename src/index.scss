@@ -11,6 +11,7 @@
 
 html {
   // overflow: hidden;
+  height: 100%;
   overflow-y: scroll;
   // scroll-snap-points-y: repeat(100vh);
   // -webkit-scroll-snap-points-y: repeat(100vh);
@@ -35,6 +36,19 @@ body {
   background-color: #1d1810;
   /* background: radial-gradient(ellipse at 50%, #4a2d18 0%, #1d1810 60%); */
   color: #fff;
+  position: fixed;
+  height: 100%;
+
+  // margin: 0;
+  // padding: 0;
+  // border: 0;
+  // outline: 0;
+  // background: 0 0;
+  // -webkit-overflow-scrolling: touch;
+  // overflow-x: auto;
+  // overflow-y: hidden;
+  // position: fixed;
+  // height: 100%;
   // overflow-y: scroll;
   // scroll-snap-points-y: repeat(100vh);
   // -webkit-scroll-snap-points-y: repeat(100vh);

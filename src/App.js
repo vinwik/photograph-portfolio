@@ -486,6 +486,8 @@ overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
     props.isExpanded
       ? "background 0.05s ease-in-out"
       : "background 0.6s ease-in-out 1.2s"};
+overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
+
   /* scroll-snap-type: y mandatory; */
   /* scroll-snap-type: ${(props) =>
     props.isScrolling ? "none" : "y mandatory"} */
