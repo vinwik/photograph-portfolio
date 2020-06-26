@@ -53,6 +53,7 @@ function App() {
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [scrollBehaviorSupport] = useState(supportsNativeSmoothScroll);
+  const [isMobile, setIsMobile] = useState(false);
   const totalImages = useRef(0);
 
   const [isScrolling, setIsScrolling] = useState(false);
@@ -81,7 +82,7 @@ function App() {
         top: window.innerHeight * position,
       });
       // setTimeout(() => {
-      setWindowHeight(window.innerHeight);
+      // setWindowHeight(window.innerHeight);
       // }, 0);
     }, 66);
   }
@@ -93,15 +94,15 @@ function App() {
     if (position < height * 0.5) {
       setScrollPosition(0);
       sessionStorage.setItem("scrollPosition", "0");
-      // scrollEnd(0);
+      scrollEnd(0);
     } else if (position < height * 1.5) {
       setScrollPosition(1);
       sessionStorage.setItem("scrollPosition", "1");
-      // scrollEnd(1);
+      scrollEnd(1);
     } else {
       setScrollPosition(2);
       sessionStorage.setItem("scrollPosition", "2");
-      // scrollEnd(2);
+      scrollEnd(2);
     }
   };
 
@@ -145,7 +146,18 @@ function App() {
     }
   };
 
+  const checkIsMobile = () => {
+    if (
+      navigator.userAgent.match(/Android/i) ||
+      navigator.userAgent.match(/webOS/i) ||
+      navigator.userAgent.match(/iPhone|iPod|iPad/i)
+    ) {
+      setIsMobile(true);
+    }
+  };
+
   useEffect(() => {
+    checkIsMobile();
     setIntroEnded(true);
     setIndex(0);
     window.scrollTo({
@@ -222,7 +234,7 @@ function App() {
 
   return (
     <>
-      <GlobalStyle index={index} isExpanded={isExpanded} />
+      <GlobalStyle index={index} isExpanded={isExpanded} isMobile={isMobile} />
       <Intro introEnded={introEnded}>
         <LogoIntro />
       </Intro>
@@ -473,7 +485,8 @@ scrollbar-width: none;
   }
 }
 html {
-overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
+overflow: ${(props) =>
+  props.isMobile || !props.isExpanded ? "hidden" : "auto"};
 /* overflow: hidden; */
   /* width: 100vw; */
 }
@@ -486,7 +499,7 @@ overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
     props.isExpanded
       ? "background 0.05s ease-in-out"
       : "background 0.6s ease-in-out 1.2s"};
-overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
+/* overflow: ${(props) => (props.isExpanded ? "scroll" : "hidden")}; */
 
   /* scroll-snap-type: y mandatory; */
   /* scroll-snap-type: ${(props) =>
@@ -497,7 +510,6 @@ overflow: ${(props) => (props.isExpanded ? "auto" : "hidden")};
 const Body = styled(animated.div)`
   /* min-height: 300vh; */
   /* scroll-behavior: smooth; */
-  width: 100%;
   opacity: ${(props) => (props.introEnded ? 1 : 0)};
   transition: opacity 1s ease-in-out 0.8s;
 `;
@@ -661,8 +673,6 @@ const ImageRight = styled.img`
 
 const Container = styled(animated.div)`
   height: ${(props) => props.windowHeight + "px"};
-  /* min-height: 100vh; */
-  /* min-height: -webkit-fill-available; */
   padding: 0 3em;
   scroll-snap-align: ${(props) =>
     props.scrollBehaviorSupport ? "center" : "none"};
