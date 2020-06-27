@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, css } from "styled-components";
 import { ReactComponent as Logo } from "./assets/jfr-logo.svg";
 import { ReactComponent as LogoIntro } from "./assets/jfr-logo-intro.svg";
 import { useSpring, animated } from "react-spring";
@@ -94,15 +94,15 @@ function App() {
     if (position < height * 0.5) {
       setScrollPosition(0);
       sessionStorage.setItem("scrollPosition", "0");
-      scrollEnd(0);
+      !scrollBehaviorSupport && scrollEnd(0);
     } else if (position < height * 1.5) {
       setScrollPosition(1);
       sessionStorage.setItem("scrollPosition", "1");
-      scrollEnd(1);
+      !scrollBehaviorSupport && scrollEnd(1);
     } else {
       setScrollPosition(2);
       sessionStorage.setItem("scrollPosition", "2");
-      scrollEnd(2);
+      !scrollBehaviorSupport && scrollEnd(2);
     }
   };
 
@@ -280,7 +280,7 @@ function App() {
                         }, 600)
                       : setTimeout(() => {
                           setIsExpanded(false);
-                        }, 800);
+                        }, 700);
                   }}
                 >
                   {item}
@@ -474,23 +474,23 @@ function App() {
 export default App;
 
 const GlobalStyle = createGlobalStyle`
-*{
-  /* FireFox*/
-scrollbar-width: none;
-  /*IE10+*/
-  -ms-overflow-style: -ms-autohiding-scrollbar;
+  *{
+    /* FireFox*/
+  scrollbar-width: none;
+    /*IE10+*/
+    -ms-overflow-style: -ms-autohiding-scrollbar;
 
-&::-webkit-scrollbar {
-  /* Chrome, Safari, Edge */
-  display: none;
+  &::-webkit-scrollbar {
+    /* Chrome, Safari, Edge */
+    display: none;
+    }
   }
-}
-html {
-overflow: ${(props) =>
-  props.isMobile || !props.isExpanded ? "hidden" : "auto"};
-/* overflow: hidden; */
-  /* width: 100vw; */
-}
+  html {
+    overflow: ${(props) =>
+      props.isMobile || !props.isExpanded ? "hidden" : "auto"};
+    scroll-snap-type: ${({ isMobile }) => (!isMobile ? `y mandatory` : "none")};
+    overscroll-behavior: ${({ isMobile }) => (isMobile ? `auto` : "none")};
+  }
   body{
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
