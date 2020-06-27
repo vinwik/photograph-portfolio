@@ -265,7 +265,7 @@ function App() {
                 <MenuItem
                   active={scrollPosition === index}
                   onClick={() => {
-                    setScrollPosition(index);
+                    // setScrollPosition(index);
                     window.scrollTo({
                       behavior: "smooth",
                       top: window.innerHeight * index,
@@ -273,13 +273,14 @@ function App() {
 
                     scrollPosition === index
                       ? setIsExpanded(false)
-                      : scrollPosition - index === 1 || -1
+                      : scrollPosition - index === 1 ||
+                        scrollPosition - index === -1
                       ? setTimeout(() => {
                           setIsExpanded(false);
                         }, 600)
                       : setTimeout(() => {
                           setIsExpanded(false);
-                        }, 1000);
+                        }, 800);
                   }}
                 >
                   {item}
