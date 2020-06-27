@@ -745,7 +745,7 @@ const ImageWrapper = styled.div`
         : "translateX(-170%)"};
     opacity: ${(props) => (props.isCurrent ? 1 : 0)};
     /* transition: opacity 1s ease-in-out; */
-    transition-delay: ${(props) => (props.isCurrent ? "0.6s" : "0s")};
+    transition-delay: ${(props) => (props.isCurrent ? "0.4s" : "0s")};
     ${ImageRight} {
       transform: translateY(10%);
     }
