@@ -689,7 +689,6 @@ const Container = styled(animated.div)`
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
     height 1s ease, opacity 0.6s ease-in-out;
-  z-index: 100;
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
