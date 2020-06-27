@@ -562,7 +562,7 @@ const NavBar = styled.div`
   transition: opacity 1s ease-in-out;
   z-index: 10;
 
-  @media screen and (orientation: portrait), (max-width: 600px) {
+  @media screen and (max-width: 600px) {
     height: 60px;
   }
 `;
@@ -631,7 +631,7 @@ const LogoWrapper = styled.div`
     height: 100%;
     width: auto;
   }
-  @media screen and (orientation: portrait), (max-width: 600px) {
+  @media screen and (max-width: 600px) {
     height: 45%;
   }
 `;
