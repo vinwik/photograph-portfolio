@@ -158,8 +158,10 @@ function App() {
 
   useEffect(() => {
     checkIsMobile();
-    setIntroEnded(true);
-    setIndex(0);
+    setTimeout(() => {
+      setIntroEnded(true);
+      setIndex(0);
+    }, 3000);
     window.scrollTo({
       behavior: "smooth",
       top: `${
