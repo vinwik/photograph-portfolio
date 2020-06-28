@@ -527,6 +527,7 @@ const Intro = styled.div`
   transition: opacity 1s ease-in-out;
 
   svg {
+    width: 60%;
     path {
       stroke-dasharray: 1800;
       animation: animate 2.5s linear, pulse 2s infinite ease-in-out 1.5s;
