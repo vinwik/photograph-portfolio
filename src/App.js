@@ -4,6 +4,8 @@ import { ReactComponent as Logo } from "./assets/jfr-logo.svg";
 import { ReactComponent as LogoIntro } from "./assets/jfr-logo-intro.svg";
 import { useSpring, animated } from "react-spring";
 import { polyfill } from "smoothscroll-polyfill";
+import AboutBg from "./assets/about.jpg";
+import ContactBg from "./assets/contact.jpg";
 
 import { configureAnchors } from "react-scrollable-anchor";
 polyfill();
@@ -158,10 +160,10 @@ function App() {
 
   useEffect(() => {
     checkIsMobile();
-    setTimeout(() => {
-      setIntroEnded(true);
-      setIndex(0);
-    }, 3000);
+    // setTimeout(() => {
+    setIntroEnded(true);
+    setIndex(0);
+    // }, 3000);
     window.scrollTo({
       behavior: "smooth",
       top: `${
@@ -184,7 +186,7 @@ function App() {
         window.innerWidth !== windowWidth &&
         window.innerHeight !== windowHeight
       ) {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, window.innerWidth * scrollPosition);
         setWindowWidth(window.innerWidth);
         setWindowHeight(window.innerHeight);
       }
@@ -237,14 +239,22 @@ function App() {
   return (
     <>
       <GlobalStyle index={index} isExpanded={isExpanded} isMobile={isMobile} />
-      <Intro introEnded={introEnded}>
+      <Intro introEnded={introEnded} opacity={opacity}>
         <LogoIntro />
       </Intro>
       <NavBar opacity={opacity} introEnded={introEnded}>
-        <LogoWrapper>
+        <LogoWrapper
+          index={index}
+          scrollPosition={scrollPosition}
+          isExpanded={isExpanded}
+        >
           <Logo />
         </LogoWrapper>
-        <Menu>
+        <Menu
+          index={index}
+          scrollPosition={scrollPosition}
+          isExpanded={isExpanded}
+        >
           <h2
             onClick={() => {
               window.scrollTo({
@@ -300,13 +310,14 @@ function App() {
         index={index}
         style={AnimatedBgSolid}
       >
-        <Container
+        <Work
           style={AnimatedBgGradient}
           opacity={opacity}
           index={index}
           isExpanded={isExpanded}
           windowHeight={windowHeight}
           scrollBehaviorSupport={scrollBehaviorSupport}
+          className="container"
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -364,9 +375,8 @@ function App() {
               );
             })}
           </SectionIndicatorContainer>
-        </Container>
-        <Container
-          // style={{ background: bgSolidDark[index] }}
+        </Work>
+        <About
           style={AnimatedBgSolidDark}
           opacity={opacity}
           index={index}
@@ -383,41 +393,42 @@ function App() {
             isExpanded && setIsExpanded(false);
           }}
         >
-          {slides.map((slide, i) => {
-            return (
-              <>
-                <ImageWrapper
-                  opacity={opacity}
-                  isCurrent={index === i}
-                ></ImageWrapper>
-
-                <DescriptionContainer>
-                  <DescriptionTitle isCurrent={index === i}>
-                    {slide.page}
-                  </DescriptionTitle>
-                  <DescriptionSubtitle>Photography</DescriptionSubtitle>
-                </DescriptionContainer>
-              </>
-            );
-          })}
-
-          <SectionIndicatorContainer>
-            {slides.map((slide, i) => {
-              return (
-                <SectionIndicatorWrapper>
-                  <SectionIndicatorNumber>
-                    {"0" + slide.id}
-                  </SectionIndicatorNumber>
-                  <SectionIndicatorBullet
-                    onClick={() => setIndex(i)}
-                    isCurrent={index === i}
-                  />
-                </SectionIndicatorWrapper>
-              );
-            })}
-          </SectionIndicatorContainer>
-        </Container>
-        <Container
+          <SectionHeader about index={index}>
+            <h1>About</h1>
+          </SectionHeader>
+          <SectionContent>
+            <h1>
+              Creative & Versatile <br />
+              Freelance Photographer
+            </h1>
+            <p>
+              {/* <br /> */}
+              <br />
+              <br />
+              Hi there! <br />
+              I'm Jeff Richards, freelance photographer base in London.
+              <br />
+              <br />
+              When I’m not shooting you’ll find me scouting new places where I
+              can drink a stout with my Kindle and eat good food. <br />
+              <br />
+              I’ve been a freelance photographer for 5 years and can’t imagine
+              doing anything else. <br />
+              <br />
+              Photography is a vast and sublime world, hence my love for
+              anything my lenses have in-focus.
+              <br />
+              <br />
+              A portrait session with me is laid back and informal, just like
+              hanging out with a mate.
+              <br />
+              <br />
+              If this sounds like you, then <a href="#">get in touch</a> to book
+              your photo session!
+            </p>
+          </SectionContent>
+        </About>
+        <Contact
           // style={{ background: bgSolidDark[index] }}
           style={AnimatedBgSolidDark}
           opacity={opacity}
@@ -434,40 +445,36 @@ function App() {
             isExpanded && setIsExpanded(false);
           }}
         >
-          {slides.map((slide, i) => {
-            return (
-              <>
-                <ImageWrapper
-                  opacity={opacity}
-                  isCurrent={index === i}
-                ></ImageWrapper>
+          <SectionHeader contact index={index}>
+            <h1>Contact</h1>
+          </SectionHeader>
+          <SectionContent contact>
+            <h1>Hey there!</h1>
+            <h2>
+              Want to have a chat ? <br />
+              Drop me a line here.
+            </h2>
+            <form>
+              <div>
+                <label>Full Name</label>
+                <input type="text" name="name" />
+              </div>
+              <div>
+                <label>Email</label>
+                <input type="email" name="email" />
+              </div>
+              <div></div>
+              <div>
+                <label>Message</label>
+                <textarea name="comment" form="usrform" rows="10">
+                  Enter text here...
+                </textarea>
+              </div>
 
-                <DescriptionContainer>
-                  <DescriptionTitle isCurrent={index === i}>
-                    {slide.page}
-                  </DescriptionTitle>
-                  <DescriptionSubtitle>Photography</DescriptionSubtitle>
-                </DescriptionContainer>
-              </>
-            );
-          })}
-
-          <SectionIndicatorContainer>
-            {slides.map((slide, i) => {
-              return (
-                <SectionIndicatorWrapper>
-                  <SectionIndicatorNumber>
-                    {"0" + slide.id}
-                  </SectionIndicatorNumber>
-                  <SectionIndicatorBullet
-                    onClick={() => setIndex(i)}
-                    isCurrent={index === i}
-                  />
-                </SectionIndicatorWrapper>
-              );
-            })}
-          </SectionIndicatorContainer>
-        </Container>
+              <input type="submit" value="Send" />
+            </form>
+          </SectionContent>
+        </Contact>
       </Body>
     </>
   );
@@ -561,9 +568,10 @@ const NavBar = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 3em;
-  opacity: ${(props) => (props.introEnded ? 1 : 0)};
-  transition: opacity 1s ease-in-out;
+  opacity: ${(props) => props.opacity};
+  transition: opacity 0.6s ease-in-out 0.8s;
   z-index: 10;
+  user-select: none;
 
   @media screen and (max-width: 600px) {
     height: 60px;
@@ -633,12 +641,24 @@ const LogoWrapper = styled.div`
   svg {
     height: 100%;
     width: auto;
+    
   }
+  path {
+
+  fill:${({ scrollPosition, isExpanded, index }) =>
+    scrollPosition === 1 && !isExpanded ? bgSolid[index] : "#fff"};
+  transition: fill 0.6s ease-in-out;
+  }
+     /* fill: ${bgSolid[0]}; */
   @media screen and (max-width: 600px) {
     height: 45%;
   }
 `;
-const Menu = styled.div``;
+const Menu = styled.div`
+  color: ${({ scrollPosition, isExpanded, index }) =>
+    scrollPosition === 2 && !isExpanded ? bgSolid[index] : "#fff"};
+  transition: color 0.6s ease-in-out;
+`;
 
 const ImageLeft = styled.img`
   max-height: 60vh;
@@ -692,6 +712,206 @@ const Container = styled(animated.div)`
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
     height 1s ease, opacity 0.6s ease-in-out;
+
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    grid-template-columns: 1fr 3fr 1fr;
+    transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
+    opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+    display: ${(props) => (props.isExpanded ? "block" : "none")};
+    z-index: 5;
+  }
+`;
+const Work = styled(animated.div)`
+  height: ${(props) => props.windowHeight + "px"};
+  padding: 0 3em;
+  scroll-snap-align: ${(props) =>
+    props.scrollBehaviorSupport ? "center" : "none"};
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 25% 50% 25%;
+  opacity: ${(props) => props.opacity};
+  transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
+  background: radial-gradient(ellipse at 50%, #4a2d18 0%, #1d1810 60%);
+  box-shadow: 10px 10px 30px #00000080;
+  box-shadow: ${(props) =>
+    props.isExpanded ? "10px 10px 30px #00000080" : "none"};
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
+    height 1s ease, opacity 0.6s ease-in-out;
+  user-select: none;
+
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    grid-template-columns: 1fr 3fr 1fr;
+    transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
+    opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+    display: ${(props) => (props.isExpanded ? "block" : "none")};
+    z-index: 5;
+  }
+`;
+const About = styled(animated.div)`
+  height: ${(props) => props.windowHeight + "px"};
+  /* padding: 0 3em; */
+  scroll-snap-align: ${(props) =>
+    props.scrollBehaviorSupport ? "center" : "none"};
+  display: flex;
+  /* align-items: center; */
+  align-items: flex-end;
+  overflow: hidden;
+  opacity: ${(props) => props.opacity};
+  transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
+  box-shadow: 10px 10px 30px #00000080;
+  box-shadow: ${(props) =>
+    props.isExpanded ? "10px 10px 30px #00000080" : "none"};
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
+    height 1s ease, opacity 0.6s ease-in-out;
+
+  font-size: 18px;
+  background-color: #fff;
+  overflow: scroll;
+
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    grid-template-columns: 1fr 3fr 1fr;
+    transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
+    opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+    display: ${(props) => (props.isExpanded ? "block" : "none")};
+    z-index: 5;
+  }
+`;
+
+const SectionHeader = styled.div`
+  width: 40%;
+  background: url(${({ about }) => (about ? AboutBg : ContactBg)}) no-repeat
+    center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  height: 100%;
+  font-size: 30px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  user-select: none;
+
+  h1 {
+    color: ${(props) => bgSolid[props.index]};
+    transform: translateY(-100%);
+  }
+`;
+const SectionContent = styled.div`
+  width: 60%;
+  padding: 0 10%;
+  background-color: #ffffff0a;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  /* justify-content: center; */
+  justify-content: ${({ contact }) => (contact ? "flex-end" : "center")};
+  /* padding-bottom: 60px; */
+  /* padding-top: 100px; */
+  padding-bottom: 1rem;
+
+  flex-grow: 1;
+  height: 100%;
+
+  h1 {
+    line-height: ${({ contact }) => (contact ? 2 : 1.2)};
+  }
+  h2 {
+    opacity: 0.5;
+    line-height: 1.2;
+  }
+  p {
+    line-height: 1.4;
+    color: #d2d2d2;
+  }
+  a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  form {
+    margin-top: 2rem;
+    text-align: right;
+    div {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+  }
+  label {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  input,
+  textarea {
+    font-size: 16px;
+    padding: 5px 10px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    resize: none;
+    font-family: "Poppins";
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    border-color: transparent;
+  }
+  input[type="submit"] {
+    padding: 5px 20px;
+  }
+`;
+
+const Contact = styled(animated.div)`
+  height: ${(props) => props.windowHeight + "px"};
+  /* padding: 0 3em; */
+  scroll-snap-align: ${(props) =>
+    props.scrollBehaviorSupport ? "center" : "none"};
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  overflow: hidden;
+  opacity: ${(props) => props.opacity};
+  transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
+  box-shadow: 10px 10px 30px #00000080;
+  box-shadow: ${(props) =>
+    props.isExpanded ? "10px 10px 30px #00000080" : "none"};
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
+    height 1s ease, opacity 0.6s ease-in-out;
+
+  font-size: 18px;
+  background-color: #fff;
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
