@@ -317,6 +317,8 @@ function App() {
           isExpanded={isExpanded}
           windowHeight={windowHeight}
           scrollBehaviorSupport={scrollBehaviorSupport}
+          isMobile={isMobile}
+          scrollPosition={scrollPosition}
           className="container"
           onClick={() => {
             isExpanded &&
@@ -384,6 +386,8 @@ function App() {
           windowHeight={windowHeight}
           scrollBehaviorSupport={scrollBehaviorSupport}
           isScrolling={isScrolling}
+          isMobile={isMobile}
+          scrollPosition={scrollPosition}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -436,6 +440,8 @@ function App() {
           isExpanded={isExpanded}
           windowHeight={windowHeight}
           scrollBehaviorSupport={scrollBehaviorSupport}
+          isMobile={isMobile}
+          scrollPosition={scrollPosition}
           onClick={() => {
             isExpanded &&
               window.scrollTo({
@@ -732,7 +738,9 @@ const Container = styled(animated.div)`
   }
 `;
 const Work = styled(animated.div)`
-  height: ${(props) => props.windowHeight + "px"};
+  /* height: ${(props) => props.windowHeight + "px"}; */
+  height: ${(props) => (props.isMobile ? props.windowHeight + "px" : "100vh")};
+  /* height: 100vh; */
   padding: 0 3em;
   scroll-snap-align: ${(props) =>
     props.scrollBehaviorSupport ? "center" : "none"};
@@ -750,10 +758,19 @@ const Work = styled(animated.div)`
     height 1s ease, opacity 0.6s ease-in-out;
   user-select: none;
 
+  &>div {
+      opacity: ${(props) =>
+        !props.isExpanded && props.scrollPosition !== 0 ? 0 : props.opacity};
+    }
+
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
+    &>div {
+      opacity: ${(props) =>
+        !props.isExpanded && props.scrollPosition !== 0 ? 0 : props.opacity};
+    }
   }
 
   &:after {
@@ -769,7 +786,9 @@ const Work = styled(animated.div)`
   }
 `;
 const About = styled(animated.div)`
-  height: ${(props) => props.windowHeight + "px"};
+  /* height: ${(props) => props.windowHeight + "px"}; */
+  height: ${(props) => (props.isMobile ? props.windowHeight + "px" : "100vh")};
+  /* height: 100vh; */
   /* padding: 0 3em; */
   scroll-snap-align: ${(props) =>
     props.scrollBehaviorSupport ? "center" : "none"};
@@ -789,10 +808,20 @@ const About = styled(animated.div)`
   background-color: #fff;
   overflow: scroll;
 
+  &>div {
+      opacity: ${(props) =>
+        !props.isExpanded && props.scrollPosition !== 1 ? 0 : props.opacity};
+    }
+  
+
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
+    &>div {
+      opacity: ${(props) =>
+        !props.isExpanded && props.scrollPosition !== 1 ? 0 : props.opacity};
+    }
   }
 
   &:after {
@@ -824,6 +853,9 @@ const SectionHeader = styled.div`
   h1 {
     color: ${(props) => bgSolid[props.index]};
     transform: translateY(-100%);
+  }
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    display: none;
   }
 `;
 const SectionContent = styled.div`
@@ -891,10 +923,14 @@ const SectionContent = styled.div`
   input[type="submit"] {
     padding: 5px 20px;
   }
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    font-size: 14px;
+  }
 `;
 
 const Contact = styled(animated.div)`
-  height: ${(props) => props.windowHeight + "px"};
+  height: ${(props) => (props.isMobile ? props.windowHeight + "px" : "100vh")};
+  /* height: 100vh; */
   /* padding: 0 3em; */
   scroll-snap-align: ${(props) =>
     props.scrollBehaviorSupport ? "center" : "none"};
@@ -913,10 +949,19 @@ const Contact = styled(animated.div)`
   font-size: 18px;
   background-color: #fff;
 
+  & > div {
+    opacity: ${(props) =>
+      !props.isExpanded && props.scrollPosition !== 2 ? 0 : props.opacity};
+  }
+
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
+    & > div {
+      opacity: ${(props) =>
+        !props.isExpanded && props.scrollPosition !== 2 ? 0 : props.opacity};
+    }
   }
 
   &:after {
