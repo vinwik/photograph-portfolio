@@ -96,15 +96,15 @@ function App() {
     if (position < height * 0.5) {
       setScrollPosition(0);
       sessionStorage.setItem("scrollPosition", "0");
-      !scrollBehaviorSupport && scrollEnd(0);
+      scrollEnd(0);
     } else if (position < height * 1.5) {
       setScrollPosition(1);
       sessionStorage.setItem("scrollPosition", "1");
-      !scrollBehaviorSupport && scrollEnd(1);
+      scrollEnd(1);
     } else {
       setScrollPosition(2);
       sessionStorage.setItem("scrollPosition", "2");
-      !scrollBehaviorSupport && scrollEnd(2);
+      scrollEnd(2);
     }
   };
 
@@ -158,19 +158,28 @@ function App() {
     }
   };
 
+  window.addEventListener("resize", () => {
+    window.scrollTo({
+      // behavior: "smooth",
+      top: window.innerHeight * scrollPosition,
+    });
+  });
+
+  // window.addEventListener("scroll", handleScroll, { passive: true });
+
   useEffect(() => {
     checkIsMobile();
     // setTimeout(() => {
     setIntroEnded(true);
     setIndex(0);
     // }, 3000);
-    window.scrollTo({
-      behavior: "smooth",
-      top: `${
-        Number(sessionStorage.getItem("scrollPosition")) * window.innerHeight ||
-        0
-      }`,
-    });
+    // window.scrollTo({
+    //   behavior: "smooth",
+    //   top: `${
+    //     Number(sessionStorage.getItem("scrollPosition")) * window.innerHeight ||
+    //     0
+    //   }`,
+    // });
 
     // window.scrollTo(0, Number(sessionStorage.getItem("scrollPosition")) || 0);
 
@@ -179,18 +188,23 @@ function App() {
     // });
     // window.addEventListener("DOMMouseScroll", preventDefault, false);
 
-    // window.addEventListener("keydown", preventDefaultKeys, false);
-    window.addEventListener("resize", () => {
-      setWindowHeight(window.innerHeight);
-      if (
-        window.innerWidth !== windowWidth &&
-        window.innerHeight !== windowHeight
-      ) {
-        window.scrollTo(0, window.innerWidth * scrollPosition);
-        setWindowWidth(window.innerWidth);
-        setWindowHeight(window.innerHeight);
-      }
-    });
+    window.addEventListener("keydown", preventDefaultKeys, false);
+    // window.addEventListener("resize", () => {
+    //   window.scrollTo({
+    //     behavior: "smooth",
+    //     top: window.innerHeight * scrollPosition,
+    //   });
+    // setWindowHeight(window.innerHeight);
+    // if (
+    //   window.innerWidth !== windowWidth &&
+    //   window.innerHeight !== windowHeight
+    // ) {
+    //   window.scrollTo(0, window.innerWidth * scrollPosition);
+    //   setWindowWidth(window.innerWidth);
+    //   setWindowHeight(window.innerHeight);
+    // }
+    // });
+
     return () => {
       window.removeEvListener("DOMMouseScroll", preventDefault);
       window.removeEvListener("wheel", preventDefault);
@@ -503,7 +517,8 @@ const GlobalStyle = createGlobalStyle`
   html {
     overflow: ${(props) =>
       props.isMobile || !props.isExpanded ? "hidden" : "auto"};
-    scroll-snap-type: ${({ isMobile }) => (!isMobile ? `y mandatory` : "none")};
+    /* scroll-snap-type: ${({ isMobile }) =>
+      !isMobile ? `y mandatory` : "none"}; */
     overscroll-behavior: ${({ isMobile }) => (isMobile ? `auto` : "none")};
   }
   body{
@@ -754,8 +769,7 @@ const Work = styled(animated.div)`
   box-shadow: 10px 10px 30px #00000080;
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
-  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
-    height 1s ease, opacity 0.6s ease-in-out;
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out, opacity 0.6s ease-in-out;
   user-select: none;
 
   &>div {
@@ -801,12 +815,11 @@ const About = styled(animated.div)`
   box-shadow: 10px 10px 30px #00000080;
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
-  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
-    height 1s ease, opacity 0.6s ease-in-out;
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out, opacity 0.6s ease-in-out;
 
   font-size: 18px;
   background-color: #fff;
-  overflow: scroll;
+  /* overflow: scroll; */
 
   &>div {
       opacity: ${(props) =>
@@ -909,7 +922,7 @@ const SectionContent = styled.div`
   }
   input,
   textarea {
-    font-size: 16px;
+    font-size: 14px;
     padding: 5px 10px;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
@@ -944,7 +957,7 @@ const Contact = styled(animated.div)`
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
-    height 1s ease, opacity 0.6s ease-in-out;
+    opacity 0.6s ease-in-out;
 
   font-size: 18px;
   background-color: #fff;
@@ -982,14 +995,24 @@ const ImageWrapper = styled.div`
   align-self: center;
   justify-self: center;
   transform: ${(props) =>
-    props.isCurrent ? "translateY(0%)" : "translateY(-170%)"};
+    props.isCurrent ? "translateY(0%)" : "translateY(-100vh)"};
   opacity: ${(props) => (props.isCurrent ? 1 : 0)};
-  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
-  transition-delay: ${(props) => (props.isCurrent ? "0.6s" : "0s")};
+  transition: transform 1.2s ease-in-out, opacity 1s ease-in-out;
+  transition-delay: ${(props) => (props.isCurrent ? "0.4s" : "0s")};
 
+  ${ImageLeft} {
+    opacity: ${(props) => (props.isCurrent ? 1 : 0)};
+    transition: transform 1s ease-in-out,
+      opacity 0.6s ease-in-out ${(props) =>
+        props.isCurrent ? "0.6s" : "0.4s"};
+  }
   ${ImageRight} {
-    transform: ${(props) =>
-      props.isCurrent ? "translateY(10%)" : "translateY(20%)"};
+    /* transform: ${(props) =>
+      props.isCurrent ? "translateY(10%)" : "translateY(20%)"}; */
+    opacity: ${(props) => (props.isCurrent ? 1 : 0)};
+    transition: transform 1s ease-in-out,
+      opacity 0.6s ease-in-out ${(props) =>
+        props.isCurrent ? "0.6s" : "0.4s"};
   }
   &:hover {
     ${ImageLeft} {
@@ -1009,8 +1032,8 @@ const ImageWrapper = styled.div`
       props.isCurrent
         ? "translateX(0%)"
         : props.isNext
-        ? "translateX(170%)"
-        : "translateX(-170%)"};
+        ? "translateX(100vw)"
+        : "translateX(-100vw)"};
     opacity: ${(props) => (props.isCurrent ? 1 : 0)};
     /* transition: opacity 1s ease-in-out; */
     transition-delay: ${(props) => (props.isCurrent ? "0.4s" : "0s")};
