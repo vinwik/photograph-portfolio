@@ -535,7 +535,8 @@ const GlobalStyle = createGlobalStyle`
       props.isMobile || !props.isExpanded ? "hidden" : "auto"};
     /* scroll-snap-type: ${({ isMobile }) =>
       !isMobile ? `y mandatory` : "none"}; */
-    overscroll-behavior: ${({ isMobile }) => (isMobile ? `auto` : "none")};
+    /* overscroll-behavior: ${({ isMobile }) =>
+      isMobile ? `auto` : "none"}; */
   }
   body{
     background: ${(props) =>
