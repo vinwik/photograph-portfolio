@@ -838,7 +838,7 @@ const About = styled(animated.div)`
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out, opacity 0.6s ease-in-out;
 
-  font-size: 18px;
+  /* font-size: 18px; */
   background-color: #fff;
   /* overflow: scroll; */
 
@@ -980,7 +980,7 @@ const Contact = styled(animated.div)`
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
     opacity 0.6s ease-in-out;
 
-  font-size: 18px;
+  /* font-size: 18px; */
   background-color: #fff;
 
   & > div {
