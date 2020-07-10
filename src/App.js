@@ -1038,12 +1038,12 @@ const ImageWrapper = styled.div`
   transform: ${(props) =>
     props.isCurrent ? "translateY(0%)" : "translateY(-100vh)"};
   opacity: ${(props) => (props.isCurrent ? 1 : 0)};
-  transition: transform 1.2s ease-in-out, opacity 1s ease-in-out;
-  transition-delay: ${(props) => (props.isCurrent ? "0.4s" : "0s")};
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  transition-delay: ${(props) => (props.isCurrent ? "0.8s" : "0s")};
 
   ${ImageLeft} {
     opacity: ${(props) => (props.isCurrent ? 1 : 0)};
-    transition: transform 1s ease-in-out,
+    transition: transform 0.8s ease-in-out,
       opacity 0.6s ease-in-out ${(props) =>
         props.isCurrent ? "0.6s" : "0.4s"};
   }
@@ -1051,7 +1051,7 @@ const ImageWrapper = styled.div`
     /* transform: ${(props) =>
       props.isCurrent ? "translateY(10%)" : "translateY(20%)"}; */
     opacity: ${(props) => (props.isCurrent ? 1 : 0)};
-    transition: transform 1s ease-in-out,
+    transition: transform 0.8s ease-in-out,
       opacity 0.6s ease-in-out ${(props) =>
         props.isCurrent ? "0.6s" : "0.4s"};
   }
