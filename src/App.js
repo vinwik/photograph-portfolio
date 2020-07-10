@@ -900,10 +900,10 @@ const SectionContent = styled.div`
   flex-direction: column;
   /* align-items: center; */
   /* justify-content: center; */
-  justify-content: ${({ contact }) => (contact ? "flex-end" : "center")};
+  justify-content: ${({ contact }) => (contact ? "center" : "center")};
   /* padding-bottom: 60px; */
-  /* padding-top: 100px; */
-  padding-bottom: 1rem;
+  padding-top: ${({ contact }) => (contact ? "100px" : 0)};
+  /* padding-bottom: 1rem; */
 
   flex-grow: 1;
   height: 100%;
