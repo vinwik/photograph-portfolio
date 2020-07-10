@@ -942,7 +942,8 @@ const SectionContent = styled.div`
     font-weight: 700;
   }
   input,
-  textarea {
+  textarea,
+  button {
     font-size: 14px;
     padding: 5px 10px;
     margin-top: 0.5rem;
@@ -954,8 +955,27 @@ const SectionContent = styled.div`
     border-radius: 5px;
     border-color: transparent;
   }
-  input[type="submit"] {
-    padding: 5px 20px;
+  input[type="submit"],
+  button {
+    /* padding: 5px 15px; */
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translate(calc(100% + 15px), calc(-100% + -25px));
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+  }
+  svg {
+    width: 20px;
+    transform: translate(-1px, -2px) rotate(50deg);
+    /* transform: rotate(65deg); */
+  }
+  path {
+    width: 100%;
   }
   @media screen and (orientation: portrait), (max-width: 600px) {
     font-size: 14px;
