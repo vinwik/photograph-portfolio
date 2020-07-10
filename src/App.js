@@ -708,10 +708,12 @@ const ImageLeft = styled.img`
   @media screen and (orientation: portrait), (max-width: 600px) {
     max-height: 50vh;
   }
-  @media screen and (max-height: 700px) {
+  @media screen and (orientation: portrait),
+    (max-width: 600px) and (max-height: 700px) {
     max-height: 40vh;
   }
-  @media screen and (max-height: 600px) {
+  @media screen and (orientation: portrait),
+    (max-width: 600px) and (max-height: 600px) {
     max-height: 35vh;
   }
 `;
@@ -725,10 +727,12 @@ const ImageRight = styled.img`
   @media screen and (orientation: portrait), (max-width: 600px) {
     max-height: 50vh;
   }
-  @media screen and (max-height: 700px) {
+  @media screen and (orientation: portrait),
+    (max-width: 600px) and (max-height: 700px) {
     max-height: 40vh;
   }
-  @media screen and (max-height: 600px) {
+  @media screen and (orientation: portrait),
+    (max-width: 600px) and (max-height: 600px) {
     max-height: 35vh;
   }
 `;
