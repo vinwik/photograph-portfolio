@@ -253,9 +253,9 @@ function App() {
   return (
     <>
       <GlobalStyle index={index} isExpanded={isExpanded} isMobile={isMobile} />
-      <Intro introEnded={introEnded} opacity={opacity}>
+      {/* <Intro introEnded={introEnded} opacity={opacity}>
         <LogoIntro />
-      </Intro>
+      </Intro> */}
       <NavBar opacity={opacity} introEnded={introEnded}>
         <LogoWrapper
           index={index}
@@ -292,10 +292,12 @@ function App() {
                   active={scrollPosition === index}
                   onClick={() => {
                     // setScrollPosition(index);
-                    window.scrollTo({
-                      behavior: "smooth",
-                      top: window.innerHeight * index,
-                    });
+                    // window.scrollTo({
+                    //   behavior: "smooth",
+                    //   // top: window.innerHeight * index,
+                    //   left: window.innerWidth * index,
+                    // });
+                    this.scrollLeft(window.innerWidth * index);
 
                     scrollPosition === index
                       ? setIsExpanded(false)
@@ -531,8 +533,9 @@ const GlobalStyle = createGlobalStyle`
     }
   }
   html {
-    overflow: ${(props) =>
+    overflow-x: ${(props) =>
       props.isMobile || !props.isExpanded ? "hidden" : "auto"};
+      
     /* scroll-snap-type: ${({ isMobile }) =>
       !isMobile ? `y mandatory` : "none"}; */
     /* overscroll-behavior: ${({ isMobile }) =>
@@ -541,6 +544,8 @@ const GlobalStyle = createGlobalStyle`
   body{
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
+       overflow-x: ${(props) => (!props.isExpanded ? "hidden" : "auto")};
+      
       /* width: 120%; */
       /* transition: background 0.6s ease-in-out 1.2s; */
   transition: ${(props) =>
@@ -560,11 +565,19 @@ const Body = styled(animated.div)`
   /* scroll-behavior: smooth; */
   opacity: ${(props) => (props.introEnded ? 1 : 0)};
   transition: opacity 1s ease-in-out 0.8s;
+  display: flex;
+  /* flex-wrap: nowrap; */
+  width: 300vw;
+  & > div {
+    width: 100vw;
+    /* flex: 0 0 auto; */
+  }
 `;
 const Intro = styled.div`
   position: fixed;
   height: 100%;
   width: 100%;
+  /* width: 100vw; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -601,7 +614,10 @@ const Intro = styled.div`
 const NavBar = styled.div`
   position: fixed;
   height: 100px;
+  /* width: 100%; */
   width: 100%;
+  /* top: 0;
+  left: 0; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -777,6 +793,8 @@ const Work = styled(animated.div)`
   /* height: ${(props) => props.windowHeight + "px"}; */
   height: ${(props) => (props.isMobile ? props.windowHeight + "px" : "100vh")};
   /* height: 100vh; */
+  /* width: 100vw; */
+  /* flex-grow: 1; */
   padding: 0 3em;
   scroll-snap-align: ${(props) =>
     props.scrollBehaviorSupport ? "center" : "none"};
@@ -793,19 +811,19 @@ const Work = styled(animated.div)`
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out, opacity 0.6s ease-in-out;
   user-select: none;
 
-  &>div {
+  /* &>div {
       opacity: ${(props) =>
         !props.isExpanded && props.scrollPosition !== 0 ? 0 : props.opacity};
-    }
+    } */
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
-    &>div {
+    /* &>div {
       opacity: ${(props) =>
         !props.isExpanded && props.scrollPosition !== 0 ? 0 : props.opacity};
-    }
+    } */
   }
 
   &:after {
@@ -842,20 +860,20 @@ const About = styled(animated.div)`
   background-color: #fff;
   /* overflow: scroll; */
 
-  &>div {
+  /* &>div {
       opacity: ${(props) =>
         !props.isExpanded && props.scrollPosition !== 1 ? 0 : props.opacity};
-    }
+    } */
   
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
-    &>div {
+    /* &>div {
       opacity: ${(props) =>
         !props.isExpanded && props.scrollPosition !== 1 ? 0 : props.opacity};
-    }
+    } */
   }
 
   &:after {
@@ -1003,19 +1021,19 @@ const Contact = styled(animated.div)`
   /* font-size: 18px; */
   background-color: #fff;
 
-  & > div {
+  /* & > div {
     opacity: ${(props) =>
       !props.isExpanded && props.scrollPosition !== 2 ? 0 : props.opacity};
-  }
+  } */
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
-    & > div {
+    /* & > div {
       opacity: ${(props) =>
         !props.isExpanded && props.scrollPosition !== 2 ? 0 : props.opacity};
-    }
+    } */
   }
 
   &:after {
