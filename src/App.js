@@ -81,7 +81,7 @@ function App() {
       setIsScrolling(false);
       window.scrollTo({
         behavior: "smooth",
-        top: window.innerHeight * position,
+        left: window.innerWidth * position,
       });
       // setTimeout(() => {
       // setWindowHeight(window.innerHeight);
@@ -90,8 +90,9 @@ function App() {
   }
 
   const handleScroll = () => {
-    const position = window.pageYOffset;
-    const height = window.innerHeight;
+    // const position = window.pageYOffset;
+    const position = window.pageXOffset;
+    const height = window.innerWidth;
 
     if (position < height * 0.5) {
       setScrollPosition(0);
@@ -292,12 +293,11 @@ function App() {
                   active={scrollPosition === index}
                   onClick={() => {
                     // setScrollPosition(index);
-                    // window.scrollTo({
-                    //   behavior: "smooth",
-                    //   // top: window.innerHeight * index,
-                    //   left: window.innerWidth * index,
-                    // });
-                    this.scrollLeft(window.innerWidth * index);
+                    window.scrollTo({
+                      behavior: "smooth",
+                      // top: window.innerHeight * index,
+                      left: window.innerWidth * index,
+                    });
 
                     scrollPosition === index
                       ? setIsExpanded(false)
@@ -544,15 +544,13 @@ const GlobalStyle = createGlobalStyle`
   body{
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
-       overflow-x: ${(props) => (!props.isExpanded ? "hidden" : "auto")};
-      
+    
       /* width: 120%; */
       /* transition: background 0.6s ease-in-out 1.2s; */
   transition: ${(props) =>
     props.isExpanded
       ? "background 0.05s ease-in-out"
       : "background 0.6s ease-in-out 1.2s"};
-/* overflow: ${(props) => (props.isExpanded ? "scroll" : "hidden")}; */
 
   /* scroll-snap-type: y mandatory; */
   /* scroll-snap-type: ${(props) =>
@@ -615,7 +613,7 @@ const NavBar = styled.div`
   position: fixed;
   height: 100px;
   /* width: 100%; */
-  width: 100%;
+  width: 100vw;
   /* top: 0;
   left: 0; */
   display: flex;
