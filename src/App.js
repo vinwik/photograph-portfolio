@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect, Suspense, lazy } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 import { ReactComponent as Logo } from "./assets/jfr-logo.svg";
 import { ReactComponent as LogoIntro } from "./assets/jfr-logo-intro.svg";
-import { useSpring, useTransition, animated, useSprings } from "react-spring";
+import { useSpring, useTransition, animated } from "react-spring";
 import { polyfill } from "smoothscroll-polyfill";
 import Work from "./pages/Work";
 import About from "./pages/About";
@@ -36,34 +36,10 @@ const images = [
   "./contact.jpg",
 ];
 
-// function Loading() {
-//   return <div>Loading...</div>;
-// }
-
-// const Work = Loadable({
-//   loader: () => import("./pages/Work"),
-//   loading: Loading,
-// });
-
-// const About = Loadable({
-//   loader: () => import("./pages/About"),
-//   loading: Loading,
-// });
-// const Contact = Loadable({
-//   loader: () => import("./pages/Contact"),
-//   loading: Loading,
-// });
-
 polyfill();
 
 const bgSolid = ["#4a2d18", "#183847", "#194617"];
 const bgSolidDark = ["#1d1810", "#111A1D", "#111F11"];
-
-const bgGradient = [
-  "radial-gradient(ellipse at 50%, #4a2d18 0%, #1d1810 60%)",
-  "radial-gradient(ellipse at 50%, #183847 0%, #111A1D 60%)",
-  "radial-gradient(ellipse at 50%, #194617 0%, #111F11 60%)",
-];
 
 const menuItems = ["WORK", "ABOUT", "CONTACT"];
 const menuLinks = ["/", "/about", "/contact"];
@@ -117,17 +93,9 @@ function App() {
     }
   };
 
-  // console.log(totalImages);
-  // console.log(opacity);
   const AnimatedBgSolid = useSpring({
     to: { background: bgSolid[index !== null ? index : 0] },
     from: { background: bgSolid[index !== null ? index : 0] },
-    delay: 1000,
-    config: { mass: 5, tension: 50, friction: 14 },
-  });
-  const AnimatedBgSolidDark = useSpring({
-    to: { background: bgSolidDark[index !== null ? index : 0] },
-    from: { background: bgSolidDark[index !== null ? index : 0] },
     delay: 1000,
     config: { mass: 5, tension: 50, friction: 14 },
   });
@@ -168,13 +136,6 @@ function App() {
 
   useEffect(() => {
     checkIsMobile();
-
-    // Work.preload();
-    // About.preload();
-    // Contact.preload();
-    // setIntroEnded(true);
-    // setIndex(0);
-    // setOpacity(1);
     images.forEach((image) => {
       const img = new Image();
       img.src = image;
@@ -250,7 +211,6 @@ function App() {
           >
             {menuItems.map((item, index) => {
               return (
-                // <Link to={menuLinks[index]}>
                 <MenuItem
                   key={item}
                   active={scrollPosition === index}
@@ -281,7 +241,6 @@ function App() {
                 >
                   {item}
                 </MenuItem>
-                // </Link>
               );
             })}
           </MenuList>
@@ -367,21 +326,10 @@ function App() {
 export default App;
 
 const GlobalStyle = createGlobalStyle`
-  * {
-    /* overscroll-behavior: none; */
-  }
-  html {
-    /* overflow-x: ${(props) =>
-      props.isMobile || !props.isExpanded ? "hidden" : "auto"}; */
-    /* overflow: hidden;   */
-
-  }
+  
   body {
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
-    /* overflow: ${({ location, isExpanded }) =>
-      location.pathname !== "/" && !isExpanded ? "hidden" : "auto"}; */
-    /* overscroll-behavior: none; */
 
     transition: ${(props) =>
       props.isExpanded
@@ -391,6 +339,7 @@ const GlobalStyle = createGlobalStyle`
     @supports (-webkit-touch-callout: none) {
       overflow: ${({ location, isExpanded }) =>
         location.pathname !== "/" && !isExpanded ? "hidden" : "auto"};
+
 }
   }
 
@@ -401,15 +350,10 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Body = styled(animated.div)`
-  /* overflow: hidden; */
-  /* opacity: ${(props) => (props.introEnded && props.opacity ? 1 : 0)};
-  transition: opacity 1s ease-in-out 0.8s; */
-  /* transform: scale(0.2); */
-
   & > div {
     width: 100%;
     opacity: ${(props) => (props.introEnded && props.opacity ? 1 : 0)};
-      transition: opacity 1s ease-in-out 0.8s;
+    transition: opacity 1s ease-in-out 0.8s;
     & > div {
       height: ${(props) => props.windowHeight + "px"};
     }
@@ -421,7 +365,6 @@ const Intro = styled.div`
   height: 100vh;
   height: ${(props) => props.windowHeight + "px"};
   width: 100%;
-  /* width: 100vw; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -475,10 +418,6 @@ const NavBar = styled(animated.div)`
       props.navBg && !props.isExpanded && props.location.pathname !== "/"
         ? "#EFF3F3"
         : "transparent"};
-    /* transition: ${(props) =>
-      props.isExpanded
-        ? "background-color 0.6s ease-in-out"
-        : "transparent"}; */
   }
 `;
 

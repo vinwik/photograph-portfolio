@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSpring, animated } from "react-spring";
 
@@ -23,17 +23,11 @@ const slides = [
   },
 ];
 
-const bgSolid = ["#4a2d18", "#183847", "#194617"];
-const bgSolidDark = ["#1d1810", "#111A1D", "#111F11"];
-
 const bgGradient = [
   "radial-gradient(ellipse at 50%, #4a2d18 0%, #1d1810 60%)",
   "radial-gradient(ellipse at 50%, #183847 0%, #111A1D 60%)",
   "radial-gradient(ellipse at 50%, #194617 0%, #111F11 60%)",
 ];
-
-const supportsNativeSmoothScroll =
-  "scrollBehavior" in document.documentElement.style;
 
 function Work({
   isExpanded,
@@ -43,40 +37,22 @@ function Work({
   scrollPosition,
   setScrollPosition,
   introEnded,
-  setIntroEnded,
   opacity,
   handleLoaded,
 }) {
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [scrollBehaviorSupport] = useState(supportsNativeSmoothScroll);
   const [isMobile, setIsMobile] = useState(false);
-  const totalImages = useRef(0);
 
-  //   const handleLoaded = () => {
-  //     totalImages.current++;
-  //     if (totalImages.current === 6) {
-  //       setOpacity(1);
-  //     }
-  //   };
-
-  const AnimatedBgGradient = useSpring(
-    // index !== null &&
-    // introEnded &&
-    {
-      to: { background: bgGradient[index !== null && introEnded ? index : 0] },
-      from: {
-        background: bgGradient[index !== null && introEnded ? index : 0],
-      },
-      delay: 1000,
-      config: { mass: 5, tension: 50, friction: 14 },
-    }
-  );
+  const AnimatedBgGradient = useSpring({
+    to: { background: bgGradient[index !== null && introEnded ? index : 0] },
+    from: {
+      background: bgGradient[index !== null && introEnded ? index : 0],
+    },
+    delay: 1000,
+    config: { mass: 5, tension: 50, friction: 14 },
+  });
 
   useEffect(() => {
-    // setIntroEnded(true);
     setScrollPosition(0);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,8 +62,6 @@ function Work({
       opacity={opacity}
       index={index}
       isExpanded={isExpanded}
-      windowHeight={windowHeight}
-      scrollBehaviorSupport={scrollBehaviorSupport}
       isMobile={isMobile}
       scrollPosition={scrollPosition}
       className="container"
@@ -109,14 +83,8 @@ function Work({
             isPrev={index > i}
             isNext={index < i}
           >
-            <ImageLeft
-              //   onLoad={() => handleLoaded(slide.left)}
-              src={slide.left}
-              alt="modals"
-              isCurrent={index === i}
-            />
+            <ImageLeft src={slide.left} alt="modals" isCurrent={index === i} />
             <ImageRight
-              //   onLoad={() => handleLoaded(slide.right)}
               src={slide.right}
               alt="modals"
               isCurrent={index === i}
@@ -197,8 +165,6 @@ const ImageRight = styled.img`
   }
 `;
 const WorkPage = styled(animated.div)`
-  /* width: 100vw; */
-  /* height: 100vh; */
   padding: 0 3em;
   display: grid;
   overflow: hidden;
@@ -206,17 +172,13 @@ const WorkPage = styled(animated.div)`
   grid-template-rows: 1fr 2fr 1fr;
   opacity: ${(props) => props.opacity};
   transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
-  background: bgGradient[${(props) => props.index}];
+  background: bgGradient[ ${(props) => props.index}];
   box-shadow: 10px 10px 30px #00000080;
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
-  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out, opacity 0.6s ease-in-out;
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
+    opacity 0.6s ease-in-out;
   user-select: none;
-
-  /* &>div {
-      opacity: ${(props) =>
-        !props.isExpanded && props.scrollPosition !== 0 ? 0 : props.opacity};
-    } */
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;

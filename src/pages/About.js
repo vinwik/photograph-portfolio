@@ -1,13 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSpring, animated } from "react-spring";
-import AboutBg from "../assets/about.jpg";
 
 const bgSolid = ["#4a2d18", "#183847", "#194617"];
 const bgSolidDark = ["#1d1810", "#111A1D", "#111F11"];
-
-const supportsNativeSmoothScroll =
-  "scrollBehavior" in document.documentElement.style;
 
 export function debounce(func, wait = 5, immediate = true) {
   let timeout;
@@ -42,8 +38,6 @@ function About({
   setNavBg,
   navigateToContact,
 }) {
-  //   const [index, setIndex] = useState(null);
-  const [introEnded, setIntroEnded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   const [isScrolling, setIsScrolling] = useState(false);
@@ -51,12 +45,6 @@ function About({
   const [scrollY, setScrollY] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
   const pageEl = useRef(null);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", debounce(handleScroll));
-    return () => window.removeEventListener("scroll", debounce(handleScroll));
-  }, [debounce]);
 
   const AnimatedBgSolidDark = useSpring(
     index !== null && {
@@ -72,7 +60,6 @@ function About({
   };
 
   useEffect(() => {
-    setIntroEnded(true);
     setScrollPosition(1);
 
     if (scrollY > windowHeight * 0.3 - 60) {
@@ -170,24 +157,15 @@ function About({
 export default About;
 
 const AboutPage = styled(animated.div)`
-  /* height: ${(props) =>
-    props.isMobile ? props.windowHeight + "px" : "100vh"}; */
   display: flex;
-  /* align-items: flex-end; */
   overflow: hidden;
   opacity: ${(props) => props.opacity};
   transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
   box-shadow: 10px 10px 30px #00000080;
   box-shadow: ${(props) =>
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
-  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out, opacity 0.6s ease-in-out;
-
-  /* background-color: #fff; */
-  /* &>div {
-      opacity: ${(props) =>
-        !props.isExpanded && props.scrollPosition !== 1 ? 0 : props.opacity};
-    } */
-  
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
+    opacity 0.6s ease-in-out;
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     display: block;
@@ -215,31 +193,24 @@ const AboutPage = styled(animated.div)`
 const SectionHeader = styled.div`
   width: 40%;
   background: url("/about.jpg") no-repeat center/cover;
-  /* background-color: #fff; */
   display: flex;
   align-items: center;
   justify-content: center;
-  /* flex-grow: 1; */
-  /* font-size: 30px; */
   font-size: 2em;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   user-select: none;
   transition: background 0.6s ease-in-out;
   h1 {
     color: ${(props) => bgSolid[props.index]};
-    /* transform: translateY(-100%); */
   }
   @media screen and (orientation: portrait), (max-width: 600px) {
-    /* display: none; */
     position: relative;
     z-index: 2;
     width: 100%;
     height: 30vh;
+    box-shadow: 0 0 10px black;
     overflow: hidden;
-
-    /* flex-flow: unset; */
     h1 {
-      /* transform: translateY(0%); */
       font-size: calc(24px + 2.5vh);
       z-index: 6;
     }
@@ -254,7 +225,6 @@ const SectionContent = styled.div`
   flex-grow: 1;
   justify-content: ${({ contact }) => (contact ? "center" : "center")};
   padding-top: ${({ contact }) => (contact ? "100px" : 0)};
-  /* overflow: scroll; */
 
   h1 {
     line-height: ${({ contact }) => (contact ? 2 : 1.2)};
@@ -280,7 +250,6 @@ const SectionContent = styled.div`
     font-size: 1.6vh;
     font-size: calc(8px + 0.8vh);
     min-height: 70vh;
-    /* justify-content: flex-start; */
     width: 100%;
     padding: 8vw;
     padding: 8vw;

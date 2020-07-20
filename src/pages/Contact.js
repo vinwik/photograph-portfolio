@@ -1,14 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSpring, animated } from "react-spring";
-import AboutBg from "../assets/about.jpg";
-import ContactBg from "../assets/contact.jpg";
 
 const bgSolid = ["#4a2d18", "#183847", "#194617"];
 const bgSolidDark = ["#1d1810", "#111A1D", "#111F11"];
-
-const supportsNativeSmoothScroll =
-  "scrollBehavior" in document.documentElement.style;
 
 export function debounce(func, wait = 5, immediate = true) {
   let timeout;
@@ -42,8 +37,6 @@ function ContactPage({
   isPortrait,
   setNavBg,
 }) {
-  const [introEnded, setIntroEnded] = useState(false);
-  const [scrollBehaviorSupport] = useState(supportsNativeSmoothScroll);
   const [isMobile, setIsMobile] = useState(false);
 
   const [scrollY, setScrollY] = useState(0);
@@ -63,7 +56,6 @@ function ContactPage({
   };
 
   useEffect(() => {
-    setIntroEnded(true);
     setScrollPosition(2);
 
     if (scrollY > windowHeight * 0.3 - 60) {
@@ -79,7 +71,6 @@ function ContactPage({
 
   return (
     <Contact
-      // style={{ background: bgSolidDark[index] }}
       style={AnimatedBgSolidDark}
       opacity={opacity}
       index={index}
@@ -106,24 +97,6 @@ function ContactPage({
             zIndex: 5,
           }}
         ></div>
-        {/* <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            width: "100%",
-            height: "60px",
-            backgroundColor: "#EFF3F3",
-            opacity: navBg ? 1 : 0,
-            zIndex: 8,
-            transform: `translateY(${clamp(
-              scrollY,
-              0,
-              scrollHeight - windowHeight
-            )}px)`,
-          }}
-        ></div> */}
         <h1
           style={{
             transform:
@@ -191,17 +164,47 @@ function ContactPage({
 
 export default ContactPage;
 
+const Contact = styled(animated.div)`
+  display: flex;
+  flex-direction: row-reverse;
+  overflow: hidden;
+  opacity: ${(props) => props.opacity};
+  transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
+  box-shadow: 10px 10px 30px #00000080;
+  box-shadow: ${(props) =>
+    props.isExpanded ? "10px 10px 30px #00000080" : "none"};
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
+    opacity 0.6s ease-in-out;
+
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    display: block;
+    transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
+    opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
+    flex-direction: column;
+    height: ${(props) => props.windowHeight + "px"};
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+    display: ${(props) => (props.isExpanded ? "block" : "none")};
+    z-index: 5;
+  }
+`;
+
 const SectionHeader = styled.div`
   width: 40%;
   background: url("/contact.jpg") no-repeat center/cover;
-  /* background-color: #fff; */
-  /* background-attachment: fixed; */
   display: flex;
   align-items: center;
   justify-content: center;
-  /* flex-grow: 1; */
-  /* height: 100%; */
-  /* font-size: 30px; */
   font-size: 2em;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   user-select: none;
@@ -209,38 +212,18 @@ const SectionHeader = styled.div`
 
   h1 {
     color: ${(props) => bgSolid[props.index]};
-    /* transform: translateY(-100%); */
   }
   @media screen and (orientation: portrait), (max-width: 600px) {
-    /* display: none; */
-    /* position: absolute; */
     position: relative;
-    /* background: initial; */
     z-index: 2;
     width: 100%;
-    /* height: ${(props) => `calc(30vh - ${props.scrollY}px)`}; */
-    /* transform: ${(props) => `translateY(-${props.scrollY}px)`}; */
     height: 30vh;
     box-shadow: 0 0 10px black;
     overflow: hidden;
     h1 {
-      /* transform: translateY(0%); */
       font-size: calc(24px + 2.5vh);
-      /* font-size: 6vh; */
-      /* font-size: 14px; */
       z-index: 6;
-    /* transform: ${(props) => `translateY(${props.scrollY / 2}px)`}; */
-
     }
-    /* &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: url("/contact.jpg") no-repeat center/cover;
-    } */
   }
 `;
 const SectionContent = styled.div`
@@ -321,70 +304,16 @@ const SectionContent = styled.div`
     width: 100%;
   }
   @media screen and (orientation: portrait), (max-width: 600px) {
-    /* font-size: 14px; */
     font-size: 1.6vh;
     font-size: calc(8px + 0.8vh);
     min-height: 70vh;
-    /* justify-content: flex-start; */
-    /* justify-content: space-around; */
-    /* position: absolute; */
     width: 100%;
     padding: 8vw;
     padding-top: 3vw;
-    /* padding-top: calc(30vh + 3vw); */
-    /* padding-top: ${(props) => `calc(30vh + 3vw - ${props.scrollY}px)`}; */
     padding-bottom: 3vw;
-    /* padding-top: 30vh; */
-    /* overflow-y: scroll; */
+
     button {
       transform: unset;
     }
-  }
-`;
-
-const Contact = styled(animated.div)`
-  /* height: ${(props) =>
-    props.isMobile ? props.windowHeight + "px" : "100vh"}; */
-  display: flex;
-  flex-direction: row-reverse;
-  /* overscroll-behavior-y: none; */
-  /* align-items: center; */
-  overflow: hidden;
-  /* background-color: #ffffff0a; */
-  opacity: ${(props) => props.opacity};
-  transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
-  box-shadow: 10px 10px 30px #00000080;
-  box-shadow: ${(props) =>
-    props.isExpanded ? "10px 10px 30px #00000080" : "none"};
-  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
-    opacity 0.6s ease-in-out;
-
-  /* & > div {
-    opacity: ${(props) =>
-      !props.isExpanded && props.scrollPosition !== 2 ? 0 : props.opacity};
-  } */
-
-  @media screen and (orientation: portrait), (max-width: 600px) {
-    display: block;
-    transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
-    opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
-    flex-direction: column;
-    
-    height: ${(props) => props.windowHeight + "px"};
-    /* white-space:nowrap; */
-    overflow: scroll;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  &:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    cursor: pointer;
-    display: ${(props) => (props.isExpanded ? "block" : "none")};
-    z-index: 5;
   }
 `;
