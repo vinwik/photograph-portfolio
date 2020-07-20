@@ -379,6 +379,7 @@ const Body = styled(animated.div)`
     width: 100%;
     & > div {
       height: ${(props) => props.windowHeight + "px"};
+      overflow: hidden;
     }
   }
 `;
