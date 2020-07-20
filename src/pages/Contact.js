@@ -76,7 +76,6 @@ function ContactPage({
       index={index}
       isExpanded={isExpanded}
       windowHeight={windowHeight}
-      scrollBehaviorSupport={scrollBehaviorSupport}
       isMobile={isMobile}
       scrollPosition={scrollPosition}
       onScroll={debounce(handleScroll)}
