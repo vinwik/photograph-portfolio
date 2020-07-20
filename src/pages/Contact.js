@@ -40,40 +40,16 @@ function ContactPage({
   windowHeight,
   windowWidth,
   isPortrait,
-  //   setNavBg,
+  setNavBg,
 }) {
   const [introEnded, setIntroEnded] = useState(false);
   const [scrollBehaviorSupport] = useState(supportsNativeSmoothScroll);
   const [isMobile, setIsMobile] = useState(false);
-  const [navBg, setNavBg] = useState(false);
-  const totalImages = useRef(0);
 
   const [scrollY, setScrollY] = useState(0);
+  const [scrollHeight, setScrollHeight] = useState(0);
   const pageEl = useRef(null);
 
-  //   const handleLoaded = () => {
-  //     totalImages.current++;
-  //     if (totalImages.current === 6) {
-  //       setOpacity(1);
-  //     }
-  //   };
-
-  //   console.log(scrollY);
-
-  const AnimatedHeight = useSpring({
-    to: { height: windowHeight * 0.3 - scrollY + "px" },
-    from: { height: windowHeight * 0.3 - scrollY + "px" },
-    //   delay: 1000,
-    // config: { mass: 5, tension: 50, friction: 14 },
-  });
-  const AnimatedBgSolid = useSpring(
-    index !== null && {
-      to: { background: bgSolid[index] },
-      from: { background: bgSolid[index] },
-      delay: 1000,
-      config: { mass: 5, tension: 50, friction: 14 },
-    }
-  );
   const AnimatedBgSolidDark = useSpring(
     index !== null && {
       to: { background: bgSolidDark[index] },
@@ -83,22 +59,21 @@ function ContactPage({
     }
   );
   const handleScroll = () => {
-    // console.log(pageEl.current.scrollTop);
-
     setScrollY(pageEl.current.scrollTop);
   };
 
   useEffect(() => {
     setIntroEnded(true);
     setScrollPosition(2);
+
     if (scrollY > windowHeight * 0.3 - 60) {
       setNavBg(1);
     } else {
       setNavBg(0);
     }
-    // const handleScroll = () => setScrollY(window.scrollY);
-    // window.addEventListener("scroll", handleScroll);
-    // return () => window.removeEventListener("scroll", handleScroll);
+
+    setScrollHeight(pageEl.current.scrollHeight);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollY, windowHeight]);
 
@@ -119,37 +94,7 @@ function ContactPage({
         isExpanded && setIsExpanded(false);
       }}
     >
-      {/* <div
-        style={{
-          position: "absolute",
-          top: 0,
-          width: "100%",
-          height: "30vh",
-          backgroundColor: "#EFF3F3",
-          opacity: `${(scrollY / (windowHeight * 0.3)) * 2}`,
-          zIndex: 5,
-        }}
-      ></div> */}
-      {/* <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          width: "100%",
-          height: "60px",
-          backgroundColor: "#EFF3F3",
-          opacity: navBg ? 1 : 0,
-          zIndex: 8,
-          transform: `translateY(${scrollY}px)`,
-        }}
-      ></div> */}
-      <SectionHeader
-        contact
-        index={index}
-        // style={{ transform: `scaleY(${1 - scrollY / 100})` }}
-        // scrollY={scrollY}
-      >
+      <SectionHeader contact index={index}>
         <div
           style={{
             position: "absolute",
@@ -161,7 +106,7 @@ function ContactPage({
             zIndex: 5,
           }}
         ></div>
-        <div
+        {/* <div
           style={{
             position: "fixed",
             top: 0,
@@ -172,9 +117,13 @@ function ContactPage({
             backgroundColor: "#EFF3F3",
             opacity: navBg ? 1 : 0,
             zIndex: 8,
-            transform: `translateY(${clamp(scrollY, 0, windowHeight)}px)`,
+            transform: `translateY(${clamp(
+              scrollY,
+              0,
+              scrollHeight - windowHeight
+            )}px)`,
           }}
-        ></div>
+        ></div> */}
         <h1
           style={{
             transform:
@@ -271,8 +220,6 @@ const SectionHeader = styled.div`
     width: 100%;
     /* height: ${(props) => `calc(30vh - ${props.scrollY}px)`}; */
     /* transform: ${(props) => `translateY(-${props.scrollY}px)`}; */
-    min-height: 60px;
-    max-height: 30vh;
     height: 30vh;
     box-shadow: 0 0 10px black;
     overflow: hidden;
@@ -400,8 +347,9 @@ const Contact = styled(animated.div)`
     props.isMobile ? props.windowHeight + "px" : "100vh"}; */
   display: flex;
   flex-direction: row-reverse;
+  /* overscroll-behavior-y: none; */
   /* align-items: center; */
-  /* overflow: hidden; */
+  overflow: hidden;
   /* background-color: #ffffff0a; */
   opacity: ${(props) => props.opacity};
   transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};

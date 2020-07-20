@@ -25,6 +25,10 @@ export function debounce(func, wait = 5, immediate = true) {
   };
 }
 
+function clamp(num, min, max) {
+  return num <= min ? min : num >= max ? max : num;
+}
+
 function About({
   isExpanded,
   setIsExpanded,
@@ -33,34 +37,26 @@ function About({
   setScrollPosition,
   opacity,
   windowHeight,
+  windowWidth,
+  isPortrait,
+  setNavBg,
+  navigateToContact,
 }) {
   //   const [index, setIndex] = useState(null);
   const [introEnded, setIntroEnded] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [scrollBehaviorSupport] = useState(supportsNativeSmoothScroll);
   const [isMobile, setIsMobile] = useState(false);
-  const [imageOpacity, setImageOpacity] = useState(0);
-  const totalImages = useRef(0);
 
   const [isScrolling, setIsScrolling] = useState(false);
 
   const [scrollY, setScrollY] = useState(0);
+  const [scrollHeight, setScrollHeight] = useState(0);
+  const pageEl = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", debounce(handleScroll));
     return () => window.removeEventListener("scroll", debounce(handleScroll));
   }, [debounce]);
-
-  const [{ springscrollY }, springsetScrollY] = useSpring(() => ({
-    springscrollY: 0,
-  }));
-
-  const parallaxLevel = 20;
-  springsetScrollY({ springscrollY: scrollY });
-  const interpHeader = springscrollY.interpolate(
-    (o) => `translateY(${o / parallaxLevel}px)`
-  );
 
   const AnimatedBgSolidDark = useSpring(
     index !== null && {
@@ -71,11 +67,23 @@ function About({
     }
   );
 
+  const handleScroll = () => {
+    setScrollY(pageEl.current.scrollTop);
+  };
+
   useEffect(() => {
     setIntroEnded(true);
     setScrollPosition(1);
+
+    if (scrollY > windowHeight * 0.3 - 60) {
+      setNavBg(1);
+    } else {
+      setNavBg(0);
+    }
+
+    setScrollHeight(pageEl.current.scrollHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [scrollY, windowHeight]);
 
   return (
     <AboutPage
@@ -84,21 +92,42 @@ function About({
       index={index}
       isExpanded={isExpanded}
       windowHeight={windowHeight}
-      scrollBehaviorSupport={scrollBehaviorSupport}
       isScrolling={isScrolling}
       isMobile={isMobile}
       scrollPosition={scrollPosition}
+      onScroll={debounce(handleScroll)}
+      ref={pageEl}
       onClick={() => {
-        isExpanded &&
-          window.scrollTo({
-            behavior: "smooth",
-            top: window.innerHeight,
-          });
         isExpanded && setIsExpanded(false);
       }}
     >
       <SectionHeader about index={index}>
-        <h1>About</h1>
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            width: "100%",
+            height: "30vh",
+            backgroundColor: "#EFF3F3",
+            opacity: `${(scrollY / (windowHeight * 0.3)) * 2}`,
+            zIndex: 5,
+          }}
+        ></div>
+        <h1
+          style={{
+            transform:
+              isPortrait || windowWidth <= 600
+                ? `translateY(${clamp(
+                    scrollY / 2,
+                    0,
+                    windowHeight * 0.3 - 60
+                  )}px)`
+                : `translateY(-100%)`,
+            opacity: 4 - (scrollY / (windowHeight * 0.3)) * 6,
+          }}
+        >
+          About
+        </h1>
       </SectionHeader>
       <SectionContent>
         <h1>
@@ -127,8 +156,11 @@ function About({
           hanging out with a mate.
           <br />
           <br />
-          If this sounds like you, then <a href="#">get in touch</a> to book
-          your photo session!
+          If this sounds like you, then{" "}
+          <a href="#" onClick={() => navigateToContact()}>
+            get in touch
+          </a>{" "}
+          to book your photo session!
         </p>
       </SectionContent>
     </AboutPage>
@@ -142,7 +174,7 @@ const AboutPage = styled(animated.div)`
     props.isMobile ? props.windowHeight + "px" : "100vh"}; */
   display: flex;
   /* align-items: flex-end; */
-  /* overflow: hidden; */
+  overflow: hidden;
   opacity: ${(props) => props.opacity};
   transform: ${(props) => (props.isExpanded ? "scale(0.6)" : "scale(1)")};
   box-shadow: 10px 10px 30px #00000080;
@@ -158,10 +190,13 @@ const AboutPage = styled(animated.div)`
   
 
   @media screen and (orientation: portrait), (max-width: 600px) {
+    display: block;
     transform: ${(props) => (props.isExpanded ? "scale(0.7)" : "scale(1)")};
     opacity: ${(props) => (props.isExpanded ? 0.6 : props.opacity)};
     flex-direction: column;
-    min-height: ${(props) => props.windowHeight + "px"};
+    height: ${(props) => props.windowHeight + "px"};
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
   }
 
   &:after {
@@ -180,26 +215,33 @@ const AboutPage = styled(animated.div)`
 const SectionHeader = styled.div`
   width: 40%;
   background: url("/about.jpg") no-repeat center/cover;
-  background-color: #fff;
+  /* background-color: #fff; */
   display: flex;
   align-items: center;
   justify-content: center;
   /* flex-grow: 1; */
-  font-size: 30px;
+  /* font-size: 30px; */
+  font-size: 2em;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   user-select: none;
   transition: background 0.6s ease-in-out;
   h1 {
     color: ${(props) => bgSolid[props.index]};
-    transform: translateY(-100%);
+    /* transform: translateY(-100%); */
   }
   @media screen and (orientation: portrait), (max-width: 600px) {
     /* display: none; */
+    position: relative;
+    z-index: 2;
     width: 100%;
     height: 30vh;
+    overflow: hidden;
+
     /* flex-flow: unset; */
     h1 {
-      transform: translateY(0%);
+      /* transform: translateY(0%); */
+      font-size: calc(24px + 2.5vh);
+      z-index: 6;
     }
   }
 `;
@@ -234,58 +276,16 @@ const SectionContent = styled.div`
     }
   }
 
-  form {
-    margin-top: 2rem;
-    text-align: right;
-    div {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-  }
-  label {
-    font-size: 14px;
-    font-weight: 700;
-  }
-  input,
-  textarea,
-  button {
-    font-size: 14px;
-    padding: 5px 10px;
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-    resize: none;
-    font-family: "Poppins";
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 5px;
-    border-color: transparent;
-  }
-  input[type="submit"],
-  button {
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: translate(calc(100% + 15px), calc(-100% + -25px));
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.35);
-    }
-  }
-  svg {
-    width: 20px;
-    transform: translate(-1px, -2px) rotate(50deg);
-  }
-  path {
-    width: 100%;
-  }
   @media screen and (orientation: portrait), (max-width: 600px) {
-    font-size: 14px;
-    justify-content: flex-start;
+    font-size: 1.6vh;
+    font-size: calc(8px + 0.8vh);
+    min-height: 70vh;
+    /* justify-content: flex-start; */
     width: 100%;
     padding: 8vw;
+    padding: 8vw;
+    padding-top: 3vw;
+    padding-bottom: 3vw;
 
     h1,
     p {

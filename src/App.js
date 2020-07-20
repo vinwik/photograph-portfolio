@@ -3,7 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 import { ReactComponent as Logo } from "./assets/jfr-logo.svg";
 import { ReactComponent as LogoIntro } from "./assets/jfr-logo-intro.svg";
-import { useSpring, useTransition, animated } from "react-spring";
+import { useSpring, useTransition, animated, useSprings } from "react-spring";
 import { polyfill } from "smoothscroll-polyfill";
 import Work from "./pages/Work";
 import About from "./pages/About";
@@ -144,18 +144,26 @@ function App() {
 
   const isPortrait = windowHeight > windowWidth;
 
-  console.log(isPortrait);
-
   window.addEventListener("resize", () => {
     setWindowHeight(window.innerHeight);
     setWindowWidth(window.innerWidth);
   });
 
-  console.log(scrollY);
   const handleScroll = () => {
     if (scrollY < 200) {
       setScrollY(window.scrollY);
     }
+  };
+
+  const navigateToContact = () => {
+    setLocationIndex(false);
+    setIsExpanded(true);
+    setTimeout(() => {
+      history.push(menuLinks[2]);
+      setTimeout(() => {
+        setIsExpanded(false);
+      }, 600);
+    }, 600);
   };
 
   useEffect(() => {
@@ -172,9 +180,9 @@ function App() {
       img.src = image;
       img.onload = handleLoaded;
     });
-    // setTimeout(() => {
-    setIntroEnded(true);
-    // }, 2500);
+    setTimeout(() => {
+      setIntroEnded(true);
+    }, 2500);
     if (opacity && introEnded) {
       setIndex(0);
     }
@@ -191,8 +199,17 @@ function App() {
 
   return (
     <>
-      <GlobalStyle index={index} isExpanded={isExpanded} isMobile={isMobile} />
-      <Intro introEnded={introEnded} opacity={opacity}>
+      <GlobalStyle
+        index={index}
+        isExpanded={isExpanded}
+        isMobile={isMobile}
+        location={location}
+      />
+      <Intro
+        introEnded={introEnded}
+        opacity={opacity}
+        windowHeight={windowHeight}
+      >
         <LogoIntro />
       </Intro>
       <NavBar
@@ -200,6 +217,7 @@ function App() {
         introEnded={introEnded}
         navBg={navBg}
         isExpanded={isExpanded}
+        location={location}
       >
         <LogoWrapper
           index={index}
@@ -248,6 +266,7 @@ function App() {
                     setTimeout(() => {
                       history.push(menuLinks[index]);
                     }, 100);
+                    scrollPosition !== index && setNavBg(0);
                     scrollPosition === index
                       ? setIsExpanded(false)
                       : scrollPosition - index === 1 ||
@@ -312,6 +331,10 @@ function App() {
                     setScrollPosition={setScrollPosition}
                     opacity={opacity}
                     windowHeight={windowHeight}
+                    windowWidth={windowWidth}
+                    setNavBg={setNavBg}
+                    isPortrait={isPortrait}
+                    navigateToContact={navigateToContact}
                   />
                 )}
               />
@@ -356,12 +379,19 @@ const GlobalStyle = createGlobalStyle`
   body {
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
-    /* overflow: hidden; */
+    /* overflow: ${({ location, isExpanded }) =>
+      location.pathname !== "/" && !isExpanded ? "hidden" : "auto"}; */
+    /* overscroll-behavior: none; */
 
     transition: ${(props) =>
       props.isExpanded
         ? "background 0.05s ease-in-out"
         : "background 0.6s ease-in-out 1.2s"};
+
+    @supports (-webkit-touch-callout: none) {
+      overflow: ${({ location, isExpanded }) =>
+        location.pathname !== "/" && !isExpanded ? "hidden" : "auto"};
+}
   }
 
   a {
@@ -371,15 +401,17 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Body = styled(animated.div)`
-  overflow: hidden;
-  opacity: ${(props) => (props.introEnded && props.opacity ? 1 : 0)};
-  transition: opacity 1s ease-in-out 0.8s;
+  /* overflow: hidden; */
+  /* opacity: ${(props) => (props.introEnded && props.opacity ? 1 : 0)};
+  transition: opacity 1s ease-in-out 0.8s; */
   /* transform: scale(0.2); */
+
   & > div {
     width: 100%;
+    opacity: ${(props) => (props.introEnded && props.opacity ? 1 : 0)};
+      transition: opacity 1s ease-in-out 0.8s;
     & > div {
       height: ${(props) => props.windowHeight + "px"};
-      overflow: hidden;
     }
   }
 `;
@@ -387,6 +419,7 @@ const Intro = styled.div`
   position: fixed;
   height: 100%;
   height: 100vh;
+  height: ${(props) => props.windowHeight + "px"};
   width: 100%;
   /* width: 100vw; */
   display: flex;
@@ -422,7 +455,7 @@ const Intro = styled.div`
     }
   }
 `;
-const NavBar = styled.div`
+const NavBar = styled(animated.div)`
   position: fixed;
   height: 100px;
   width: 100vw;
@@ -439,8 +472,13 @@ const NavBar = styled.div`
     height: 60px;
     padding: 0 2em;
     background-color: ${(props) =>
-      props.navBg && !props.isExpanded ? "#EFF3F3" : "transparent"};
-    /* transition: background-color 0.6s ease-in-out; */
+      props.navBg && !props.isExpanded && props.location.pathname !== "/"
+        ? "#EFF3F3"
+        : "transparent"};
+    /* transition: ${(props) =>
+      props.isExpanded
+        ? "background-color 0.6s ease-in-out"
+        : "transparent"}; */
   }
 `;
 
