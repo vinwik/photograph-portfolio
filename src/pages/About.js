@@ -38,12 +38,8 @@ function About({
   setNavBg,
   navigateToContact,
 }) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  const [isScrolling, setIsScrolling] = useState(false);
-
   const [scrollY, setScrollY] = useState(0);
-  const [scrollHeight, setScrollHeight] = useState(0);
+  //   const [scrollHeight, setScrollHeight] = useState(0);
   const pageEl = useRef(null);
 
   const AnimatedBgSolidDark = useSpring(
@@ -68,7 +64,7 @@ function About({
       setNavBg(0);
     }
 
-    setScrollHeight(pageEl.current.scrollHeight);
+    // setScrollHeight(pageEl.current.scrollHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollY, windowHeight]);
 
@@ -79,8 +75,6 @@ function About({
       index={index}
       isExpanded={isExpanded}
       windowHeight={windowHeight}
-      isScrolling={isScrolling}
-      isMobile={isMobile}
       scrollPosition={scrollPosition}
       onScroll={debounce(handleScroll)}
       ref={pageEl}
@@ -144,10 +138,8 @@ function About({
           <br />
           <br />
           If this sounds like you, then{" "}
-          <a href="#" onClick={() => navigateToContact()}>
-            get in touch
-          </a>{" "}
-          to book your photo session!
+          <span onClick={() => navigateToContact()}>get in touch</span> to book
+          your photo session!
         </p>
       </SectionContent>
     </AboutPage>
@@ -198,7 +190,7 @@ const SectionHeader = styled.div`
   justify-content: center;
   font-size: 2em;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  user-select: none;
+  /* user-select: none; */
   transition: background 0.6s ease-in-out;
   h1 {
     color: ${(props) => bgSolid[props.index]};
@@ -237,10 +229,9 @@ const SectionContent = styled.div`
     line-height: 1.4;
     color: #d2d2d2;
   }
-  a {
+  span {
     color: #fff;
     font-weight: 700;
-    text-decoration: none;
     &:hover {
       text-decoration: underline;
     }
@@ -252,9 +243,9 @@ const SectionContent = styled.div`
     min-height: 70vh;
     width: 100%;
     padding: 8vw;
-    padding: 8vw;
+    /* padding: 8vw;
     padding-top: 3vw;
-    padding-bottom: 3vw;
+    padding-bottom: 3vw; */
 
     h1,
     p {

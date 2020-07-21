@@ -44,8 +44,8 @@ const bgSolidDark = ["#1d1810", "#111A1D", "#111F11"];
 const menuItems = ["WORK", "ABOUT", "CONTACT"];
 const menuLinks = ["/", "/about", "/contact"];
 
-const supportsNativeSmoothScroll =
-  "scrollBehavior" in document.documentElement.style;
+// const supportsNativeSmoothScroll =
+//   "scrollBehavior" in document.documentElement.style;
 
 function App() {
   const [index, setIndex] = useState(null);
@@ -55,14 +55,11 @@ function App() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [scrollBehaviorSupport] = useState(supportsNativeSmoothScroll);
   const [isMobile, setIsMobile] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [navBg, setNavBg] = useState(0);
 
   const totalImages = useRef(0);
-
-  const [isScrolling, setIsScrolling] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
 
   let location = useLocation();
@@ -130,8 +127,8 @@ function App() {
       history.push(menuLinks[2]);
       setTimeout(() => {
         setIsExpanded(false);
-      }, 600);
-    }, 600);
+      }, 700);
+    }, 700);
   };
 
   useEffect(() => {
@@ -233,10 +230,10 @@ function App() {
                         scrollPosition - index === -1
                       ? setTimeout(() => {
                           setIsExpanded(false);
-                        }, 600)
+                        }, 700)
                       : setTimeout(() => {
                           setIsExpanded(false);
-                        }, 700);
+                        }, 800);
                   }}
                 >
                   {item}
@@ -273,7 +270,6 @@ function App() {
                     introEnded={introEnded}
                     setIntroEnded={setIntroEnded}
                     opacity={opacity}
-                    handleLoaded={handleLoaded}
                     windowHeight={windowHeight}
                   />
                 )}
@@ -356,6 +352,11 @@ const Body = styled(animated.div)`
     transition: opacity 1s ease-in-out 0.8s;
     & > div {
       height: ${(props) => props.windowHeight + "px"};
+      user-select: ${(props) => (props.isExpanded ? "none" : "auto")};
+      cursor: ${(props) => (props.isExpanded ? "pointer" : "auto")};
+      @media screen and (orientation: portrait), (max-width: 600px) {
+        overflow: ${(props) => (props.isExpanded ? "hidden" : "scroll")};
+      }
     }
   }
 `;

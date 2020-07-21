@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSpring, animated } from "react-spring";
 
@@ -38,10 +38,7 @@ function Work({
   setScrollPosition,
   introEnded,
   opacity,
-  handleLoaded,
 }) {
-  const [isMobile, setIsMobile] = useState(false);
-
   const AnimatedBgGradient = useSpring({
     to: { background: bgGradient[index !== null && introEnded ? index : 0] },
     from: {
@@ -62,7 +59,6 @@ function Work({
       opacity={opacity}
       index={index}
       isExpanded={isExpanded}
-      isMobile={isMobile}
       scrollPosition={scrollPosition}
       className="container"
       onClick={() => {
@@ -77,7 +73,7 @@ function Work({
       {slides.map((slide, i) => {
         return (
           <ImageWrapper
-            // key={slide}
+            key={slide.id}
             opacity={opacity}
             isCurrent={index === i}
             isPrev={index > i}
@@ -94,9 +90,7 @@ function Work({
       })}
       {slides.map((slide, i) => {
         return (
-          <DescriptionContainer
-          //   key={slide}
-          >
+          <DescriptionContainer key={slide.page}>
             <DescriptionTitle isCurrent={index === i}>
               {slide.page}
             </DescriptionTitle>
@@ -108,9 +102,7 @@ function Work({
       <SectionIndicatorContainer>
         {slides.map((slide, i) => {
           return (
-            <SectionIndicatorWrapper
-            // key={slide}
-            >
+            <SectionIndicatorWrapper key={i}>
               <SectionIndicatorNumber>{"0" + slide.id}</SectionIndicatorNumber>
               <SectionIndicatorBullet
                 onClick={() => setIndex(i)}
@@ -178,7 +170,7 @@ const WorkPage = styled(animated.div)`
     props.isExpanded ? "10px 10px 30px #00000080" : "none"};
   transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out,
     opacity 0.6s ease-in-out;
-  user-select: none;
+  /* user-select: none; */
 
   @media screen and (orientation: portrait), (max-width: 600px) {
     grid-template-columns: 1fr 3fr 1fr;

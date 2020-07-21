@@ -37,10 +37,8 @@ function ContactPage({
   isPortrait,
   setNavBg,
 }) {
-  const [isMobile, setIsMobile] = useState(false);
-
   const [scrollY, setScrollY] = useState(0);
-  const [scrollHeight, setScrollHeight] = useState(0);
+  // const [scrollHeight, setScrollHeight] = useState(0);
   const pageEl = useRef(null);
 
   const AnimatedBgSolidDark = useSpring(
@@ -64,7 +62,7 @@ function ContactPage({
       setNavBg(0);
     }
 
-    setScrollHeight(pageEl.current.scrollHeight);
+    // setScrollHeight(pageEl.current.scrollHeight);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollY, windowHeight]);
@@ -76,7 +74,6 @@ function ContactPage({
       index={index}
       isExpanded={isExpanded}
       windowHeight={windowHeight}
-      isMobile={isMobile}
       scrollPosition={scrollPosition}
       onScroll={debounce(handleScroll)}
       ref={pageEl}
@@ -182,7 +179,8 @@ const Contact = styled(animated.div)`
     flex-direction: column;
     height: ${(props) => props.windowHeight + "px"};
     overflow: scroll;
-    -webkit-overflow-scrolling: touch;
+    /* overflow: ${(props) => (props.isExpanded ? "hidden" : "scroll")}; */
+    /* -webkit-overflow-scrolling: touch; */
   }
 
   &:after {
@@ -206,7 +204,8 @@ const SectionHeader = styled.div`
   justify-content: center;
   font-size: 2em;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  user-select: none;
+  /* user-select: none; */
+
   transition: background 0.6s ease-in-out;
 
   h1 {
