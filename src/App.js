@@ -191,10 +191,6 @@ function App() {
         >
           <h2
             onClick={() => {
-              window.scrollTo({
-                behavior: "smooth",
-                top: 0,
-              });
               setIsExpanded(!isExpanded);
             }}
             style={{ lineHeight: 1, cursor: "pointer" }}
@@ -322,11 +318,19 @@ function App() {
 export default App;
 
 const GlobalStyle = createGlobalStyle`
+
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
   
   body {
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
-
     transition: ${(props) =>
       props.isExpanded
         ? "background 0.05s ease-in-out"
@@ -355,7 +359,7 @@ const Body = styled(animated.div)`
       user-select: ${(props) => (props.isExpanded ? "none" : "auto")};
       cursor: ${(props) => (props.isExpanded ? "pointer" : "auto")};
       @media screen and (orientation: portrait), (max-width: 600px) {
-        overflow: ${(props) => (props.isExpanded ? "hidden" : "scroll")};
+        overflow-y: ${(props) => (props.isExpanded ? "hidden" : "scroll")};
       }
     }
   }
@@ -435,7 +439,9 @@ const MenuList = styled.ul`
   align-items: flex-end;
   z-index: -10;
   transform: translateX(100%);
-  transition: transform 0.6s ease-in-out, height 1s ease;
+  opacity: ${(props) => (props.isExpanded ? 1 : 0)};
+  transition: transform 0.6s ease-in-out, height 1s ease,
+    opacity 0.6s ease-in-out;
   transform: ${(props) =>
     props.isExpanded ? "translateX(0)" : "translateX(100%)"};
 
