@@ -232,6 +232,7 @@ const SectionContent = styled.div`
   span {
     color: #fff;
     font-weight: 700;
+    cursor: pointer;
     &:hover {
       text-decoration: underline;
     }
