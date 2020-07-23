@@ -8,6 +8,7 @@ import { polyfill } from "smoothscroll-polyfill";
 import Work from "./pages/Work";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Models from "./pages/Models";
 
 export function debounce(func, wait = 5, immediate = true) {
   let timeout;
@@ -58,6 +59,7 @@ function App() {
   const [isMobile, setIsMobile] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [navBg, setNavBg] = useState(0);
+  const [isModalOpened, setIsModalOpen] = useState(false);
 
   const totalImages = useRef(0);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -138,9 +140,9 @@ function App() {
       img.src = image;
       img.onload = handleLoaded;
     });
-    setTimeout(() => {
-      setIntroEnded(true);
-    }, 2500);
+    // setTimeout(() => {
+    setIntroEnded(true);
+    // }, 2500);
     if (opacity && introEnded) {
       setIndex(0);
     }
@@ -176,11 +178,14 @@ function App() {
         navBg={navBg}
         isExpanded={isExpanded}
         location={location}
+        isModalOpened={isModalOpened}
+        isGallery={location.pathname === "/models"}
       >
         <LogoWrapper
           index={index}
           scrollPosition={scrollPosition}
           isExpanded={isExpanded}
+          className="nav__logo-wrapper"
         >
           <Logo />
         </LogoWrapper>
@@ -188,6 +193,7 @@ function App() {
           index={index}
           scrollPosition={scrollPosition}
           isExpanded={isExpanded}
+          className="nav__menu"
         >
           <h2
             onClick={() => {
@@ -267,9 +273,30 @@ function App() {
                     setIntroEnded={setIntroEnded}
                     opacity={opacity}
                     windowHeight={windowHeight}
+                    history={history}
                   />
                 )}
               />
+              <Route
+                exact
+                path="/models"
+                render={() => (
+                  <Models
+                    isExpanded={isExpanded}
+                    setIsExpanded={setIsExpanded}
+                    index={index}
+                    setIndex={setIndex}
+                    scrollPosition={scrollPosition}
+                    setScrollPosition={setScrollPosition}
+                    introEnded={introEnded}
+                    setIntroEnded={setIntroEnded}
+                    opacity={opacity}
+                    windowHeight={windowHeight}
+                    isModalOpened={isModalOpened}
+                    setIsModalOpen={setIsModalOpen}
+                  />
+                )}
+              ></Route>
               <Route
                 path="/about"
                 render={() => (
@@ -415,6 +442,35 @@ const NavBar = styled(animated.div)`
   transition: opacity 0.6s ease-in-out 0.8s;
   z-index: 10;
   user-select: none;
+
+  & > div {
+    /* pointer-events: ${(props) => (props.isModalOpened ? "none" : "auto")}; */
+  }
+
+  .nav__logo-wrapper {
+    position: relative;
+    opacity: ${(props) => (props.isModalOpened ? 0.1 : 1)};
+    transform: ${(props) => `translateX(${props.isGallery ? "20px" : "0px"})`};
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    &::before {
+      content: "<";
+      position: absolute;
+      left: -50%;
+      top: 50%;
+      line-height: 1;
+      font-family: "Poppins";
+      font-size: 2em;
+      transform: translateY(-50%);
+      opacity: ${(props) => (props.isGallery ? 1 : 0)};
+      transition: opacity 0.6s ease-in-out;
+    }
+  }
+
+  .nav__menu {
+    opacity: ${(props) => (props.isGallery ? 0 : 1)};
+    pointer-events: ${(props) => (props.isGallery ? "none" : "auto")};
+    transition: opacity 0.6s ease-in-out;
+  }
 
   @media screen and (max-width: 600px) {
     height: 60px;

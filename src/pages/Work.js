@@ -29,6 +29,8 @@ const bgGradient = [
   "radial-gradient(ellipse at 50%, #194617 0%, #111F11 60%)",
 ];
 
+const menuLinks = ["/models", "/about", "/contact"];
+
 function Work({
   isExpanded,
   setIsExpanded,
@@ -38,6 +40,7 @@ function Work({
   setScrollPosition,
   introEnded,
   opacity,
+  history,
 }) {
   const AnimatedBgGradient = useSpring({
     to: { background: bgGradient[index !== null && introEnded ? index : 0] },
@@ -78,6 +81,7 @@ function Work({
             isCurrent={index === i}
             isPrev={index > i}
             isNext={index < i}
+            onClick={() => history.push(menuLinks[i])}
           >
             <ImageLeft src={slide.left} alt="modals" isCurrent={index === i} />
             <ImageRight
