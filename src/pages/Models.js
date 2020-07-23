@@ -332,15 +332,15 @@ const Img = styled.div`
   }
   img {
     width: 100%;
-    filter: ${(props) =>
+    /* filter: ${(props) =>
       props.isCurrentImage && props.clonePosition
         ? "grayscale(0%)"
-        : "grayscale(90%)"};
+        : "grayscale(90%)"}; */
     opacity: ${(props) =>
       props.isCurrentImage && props.clonePosition ? 0 : 1};
-    transition: filter 0.4s ease-in-out;
+    /* transition: filter 0.4s ease-in-out; */
     &:hover {
-      filter: grayscale(0%);
+      /* filter: grayscale(0%); */
     }
   }
 `;
