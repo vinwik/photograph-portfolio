@@ -35,9 +35,9 @@ function Models({ isModalOpened, setIsModalOpen }) {
     setCurrentImage(null);
   };
 
-  console.log(clonePosition);
-  console.log(endPosition);
-  console.log(scrollY);
+  // console.log(clonePosition);
+  // console.log(endPosition);
+  // console.log(scrollY);
 
   const pageEl = useRef(null);
 
@@ -324,7 +324,7 @@ const Grid = styled.div`
 const Img = styled.div`
   cursor: pointer;
   opacity: ${(props) =>
-    props.isCurrentImage && props.clonePosition ? 1 : 0.8};
+    props.isCurrentImage && props.clonePosition ? 1 : 0.7};
   transition: opacity 0.4s ease-in-out;
 
   &:hover {
@@ -335,10 +335,11 @@ const Img = styled.div`
     /* filter: ${(props) =>
       props.isCurrentImage && props.clonePosition
         ? "grayscale(0%)"
-        : "grayscale(90%)"}; */
+        : "grayscale(60%)"}; */
     opacity: ${(props) =>
       props.isCurrentImage && props.clonePosition ? 0 : 1};
-    /* transition: filter 0.4s ease-in-out; */
+    /* transition: filter 0.4s ease-in-out;
+    will-change: filter; */
     &:hover {
       /* filter: grayscale(0%); */
     }
