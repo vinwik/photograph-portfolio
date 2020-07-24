@@ -18,7 +18,7 @@ const images = [
   "./gallery/contact-copy.jpg",
 ];
 
-function Models({ isModalOpened, setIsModalOpen }) {
+function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
   //   const [isModalOpened, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [imagesPosition, setImagesPosition] = useState([]);
@@ -116,6 +116,7 @@ function Models({ isModalOpened, setIsModalOpen }) {
         clonePosition={clonePosition}
         setIsModalOpen={setIsModalOpen}
         setEndPosition={setEndPosition}
+        windowHeight={windowHeight}
       />
       {/* )} */}
       {/* </Grid> */}
@@ -251,6 +252,7 @@ const LightBox = ({
   isModalOpened,
   setEndPosition,
   clonePosition,
+  windowHeight,
 }) => {
   const [opacity, setOpacity] = useState(0);
   const [imagePosition, setImagePosition] = useState(null);
@@ -262,7 +264,7 @@ const LightBox = ({
         position: "fixed",
         top: 0,
         left: 0,
-        height: "100vh",
+        height: `${windowHeight}px`,
         width: "100%",
         backgroundColor: "rgba(0,0,0,0.9)",
         opacity: `${isModalOpened ? 1 : 0}`,
