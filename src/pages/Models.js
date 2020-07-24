@@ -389,4 +389,7 @@ const Img = styled.div`
       /* filter: grayscale(0%); */
     }
   }
+  @media screen and (orientation: portrait), (max-width: 600px) {
+    opacity: 1;
+  }
 `;
