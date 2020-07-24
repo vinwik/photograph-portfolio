@@ -81,7 +81,7 @@ function Work({
             isCurrent={index === i}
             isPrev={index > i}
             isNext={index < i}
-            onClick={() => history.push(menuLinks[i])}
+            onClick={() => history.push("/models")}
           >
             <ImageLeft src={slide.left} alt="modals" isCurrent={index === i} />
             <ImageRight
@@ -205,6 +205,7 @@ const ImageWrapper = styled.div`
   opacity: ${(props) => (props.isCurrent ? 1 : 0)};
   transition: transform 1s ease-in-out, opacity 1s ease-in-out;
   transition-delay: ${(props) => (props.isCurrent ? "0.8s" : "0s")};
+  cursor: pointer;
 
   ${ImageLeft} {
     opacity: ${(props) => (props.isCurrent ? 1 : 0)};

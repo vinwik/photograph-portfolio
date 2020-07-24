@@ -70,18 +70,28 @@ function App() {
   const transitions = useTransition(location, (location) => location.pathname, {
     // config: { mass: 1, tension: 110, friction: 20 },
     from: {
-      transform: !isExpanded
-        ? "translate(0,0%)"
-        : locationIndex
-        ? "translate(0,-100%)"
-        : "translate(0,100%)",
+      transform:
+        !isExpanded && location.pathname === "/"
+          ? "translate(-100%,0%)"
+          : !isExpanded
+          ? "translate(0%,0%)"
+          : locationIndex
+          ? "translate(0,-100%)"
+          : "translate(0,100%)",
       position: "absolute",
       overflow: "hidden",
       // width: "100%",
     },
-    enter: { transform: "translate(0,0%)" },
+    enter: { transform: "translate(0%,0%)" },
     leave: {
-      transform: locationIndex ? "translate(0,100%)" : "translate(0,-100%)",
+      transform:
+        !isExpanded && location.pathname === "/models"
+          ? "translate(-100%,0%)"
+          : !isExpanded
+          ? "translate(0%,0%)"
+          : locationIndex
+          ? "translate(0,100%)"
+          : "translate(0,-100%)",
     },
   });
 
@@ -186,6 +196,9 @@ function App() {
           scrollPosition={scrollPosition}
           isExpanded={isExpanded}
           className="nav__logo-wrapper"
+          onClick={() => {
+            location.pathname === "/models" && history.push(menuLinks[0]);
+          }}
         >
           <Logo />
         </LogoWrapper>
@@ -440,7 +453,7 @@ const NavBar = styled(animated.div)`
   padding: 0 3em;
   opacity: ${(props) => (props.introEnded && props.opacity ? 1 : 0)};
   transition: opacity 0.6s ease-in-out 0.8s;
-  z-index: 10;
+  z-index: ${(props) => (props.isModalOpened ? 0 : 10)};
   user-select: none;
 
   & > div {
@@ -452,6 +465,7 @@ const NavBar = styled(animated.div)`
     opacity: ${(props) => (props.isModalOpened ? 0.1 : 1)};
     transform: ${(props) => `translateX(${props.isGallery ? "20px" : "0px"})`};
     transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    cursor: ${(props) => (props.isGallery ? "pointer" : "auto")};
     &::before {
       content: "<";
       position: absolute;
@@ -469,7 +483,7 @@ const NavBar = styled(animated.div)`
   .nav__menu {
     opacity: ${(props) => (props.isGallery ? 0 : 1)};
     pointer-events: ${(props) => (props.isGallery ? "none" : "auto")};
-    transition: opacity 0.6s ease-in-out;
+    transition: opacity 0.6s ease-in-out, color 0.6s ease-in-out;
   }
 
   @media screen and (max-width: 600px) {
