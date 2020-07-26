@@ -115,7 +115,7 @@ function ContactPage({
           Want to have a chat ? <br />
           Drop me a line here.
         </h2>
-        <form>
+        <form name="contact" method="post">
           <div>
             <label>Full Name</label>
             <input type="text" name="name" />
@@ -128,7 +128,7 @@ function ContactPage({
           <div>
             <label>Message</label>
             <textarea
-              name="comment"
+              name="message"
               value=" Enter text here..."
               form="usrform"
               rows="10"
