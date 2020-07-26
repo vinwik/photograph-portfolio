@@ -48,6 +48,9 @@ const menuLinks = ["/", "/about", "/contact"];
 // const supportsNativeSmoothScroll =
 //   "scrollBehavior" in document.documentElement.style;
 
+const keys = [];
+let previousKey;
+
 function App() {
   const [index, setIndex] = useState(null);
   const [locationIndex, setLocationIndex] = useState(null);
@@ -67,8 +70,30 @@ function App() {
   let location = useLocation();
   let history = useHistory();
 
-  const transitions = useTransition(location, (location) => location.pathname, {
-    // config: { mass: 1, tension: 110, friction: 20 },
+  history.listen((location, action) => {
+    const { key } = location;
+    // console.log(keys.indexOf(key) < keys.indexOf(previousKey));
+
+    // If there is no key, it was a goBack.
+    if (key === undefined) {
+      // console.log("goBack");
+      return;
+    }
+
+    // If it's an entirely new key, it was a goForward.
+    // If it was neither of the above, you can compare the index
+    // of `key` to the previous key in your keys array.
+    if (!keys.includes(key)) {
+      keys.push(key);
+      // console.log("goForward");
+    } else if (keys.indexOf(key) < keys.indexOf(previousKey)) {
+      // console.log("goBack");
+    } else {
+      // console.log("goForward");
+    }
+
+    previousKey = key;
+  });
     from: {
       transform:
         !isExpanded && location.pathname === "/"
