@@ -87,11 +87,10 @@ function App() {
       transform:
         !isExpanded && location.pathname === "/models"
           ? "translate(-100%,0%)"
-          : !isExpanded
-          ? "translate(0%,0%)"
-          : locationIndex
-          ? "translate(0,100%)"
-          : "translate(0,-100%)",
+              ? "translate(0%,-100%)"
+              : "translate(0%,100%)",
+              ? "translate(0%,100%)"
+              : "translate(0%,-100%)",
     },
   });
 
