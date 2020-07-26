@@ -163,6 +163,7 @@ function ContactPage({
               name="name"
               value={name}
               onChange={handleChange}
+              required
             />
           </div>
           <div>
@@ -172,6 +173,7 @@ function ContactPage({
               name="email"
               value={email}
               onChange={handleChange}
+              required
             />
           </div>
           <div></div>
@@ -183,6 +185,7 @@ function ContactPage({
               rows="10"
               value={message}
               onChange={handleChange}
+              required
             />
           </div>
 
