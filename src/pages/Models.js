@@ -57,6 +57,7 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
     //     setScale(1);
     //   }, 100);
     // }, 100);
+    return () => setIsModalOpen(false);
   }, []);
 
   return (
