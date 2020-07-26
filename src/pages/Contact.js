@@ -41,6 +41,11 @@ function ContactPage({
   // const [scrollHeight, setScrollHeight] = useState(0);
   const pageEl = useRef(null);
 
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
   const AnimatedBgSolidDark = useSpring(
     index !== null && {
       to: { background: bgSolidDark[index] },
@@ -51,6 +56,41 @@ function ContactPage({
   );
   const handleScroll = () => {
     setScrollY(pageEl.current.scrollTop);
+  };
+
+  const encode = (data) => {
+    const formData = new FormData();
+    Object.keys(data).forEach((k) => {
+      formData.append(k, data[k]);
+    });
+    return formData;
+  };
+
+  const handleSubmit = (e) => {
+    const data = { "form-name": "contact", name, email, message };
+
+    fetch("/", {
+      method: "POST",
+      // headers: { "Content-Type": 'multipart/form-data; boundary=random' },
+      body: encode(data),
+    })
+      .then(() => setStatus("Form Submission Successful!!"))
+      .catch((error) => setStatus("Form Submission Failed!"));
+
+    e.preventDefault();
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "name") {
+      return setName(value);
+    }
+    if (name === "email") {
+      return setEmail(value);
+    }
+    if (name === "message") {
+      return setMessage(value);
+    }
   };
 
   useEffect(() => {
@@ -115,23 +155,34 @@ function ContactPage({
           Want to have a chat ? <br />
           Drop me a line here.
         </h2>
-        <form name="contact" method="post">
+        <form name="contact" method="post" onSubmit={handleSubmit}>
           <div>
             <label>Full Name</label>
-            <input type="text" name="name" />
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>Email</label>
-            <input type="email" name="email" />
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={handleChange}
+            />
           </div>
           <div></div>
           <div>
             <label>Message</label>
             <textarea
               name="message"
-              value=" Enter text here..."
               form="usrform"
               rows="10"
+              value={message}
+              onChange={handleChange}
             />
           </div>
 
