@@ -249,7 +249,7 @@ function App() {
           isExpanded={isExpanded}
           className="nav__logo-wrapper"
           onClick={() => {
-            location.pathname === "/models" && history.push(menuLinks[0]);
+            location.pathname === "/models" && history.goBack();
           }}
         >
           <Logo />
