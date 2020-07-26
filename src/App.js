@@ -94,15 +94,24 @@ function App() {
 
     previousKey = key;
   });
+
+  const transitions = useTransition(
+    location,
+    (location) => location.pathname,
+    !isExpanded
+      ? {
+          config: { mass: 1, tension: 110, friction: 20 },
     from: {
       transform:
-        !isExpanded && location.pathname === "/"
-          ? "translate(-100%,0%)"
-          : !isExpanded
+              location.pathname === "/models"
           ? "translate(0%,0%)"
-          : locationIndex
-          ? "translate(0,-100%)"
-          : "translate(0,100%)",
+                : history.action === "PUSH"
+                ? "translate(-100%,0%)"
+                : history.action === "POP" &&
+                  keys.indexOf(history.location.key) < keys.indexOf(previousKey)
+                ? "translate(-100%,0%)"
+                : history.action === "POP" && "translate(100%,0%)",
+
       position: "absolute",
       overflow: "hidden",
       // width: "100%",
@@ -110,14 +119,33 @@ function App() {
     enter: { transform: "translate(0%,0%)" },
     leave: {
       transform:
-        !isExpanded && location.pathname === "/models"
+              history.action === "PUSH"
           ? "translate(-100%,0%)"
+                : history.action === "POP" &&
+                  keys.indexOf(history.location.key) < keys.indexOf(previousKey)
+                ? "translate(100%,0%)"
+                : history.action === "POP" && "translate(-100%,0%)",
+          },
+        }
+      : {
+          // config: { mass: 1, tension: 110, friction: 20 },
+          from: {
+            transform: locationIndex
               ? "translate(0%,-100%)"
               : "translate(0%,100%)",
+
+            position: "absolute",
+            overflow: "hidden",
+            // width: "100%",
+          },
+          enter: { transform: "translate(0%,0%)" },
+          leave: {
+            transform: locationIndex
               ? "translate(0%,100%)"
               : "translate(0%,-100%)",
     },
-  });
+        }
+  );
 
   const handleLoaded = () => {
     totalImages.current++;
