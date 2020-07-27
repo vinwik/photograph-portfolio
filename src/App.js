@@ -51,6 +51,10 @@ const menuLinks = ["/", "/about", "/contact"];
 const keys = [];
 let previousKey;
 
+// localStorage.setItem('history', JSON.stringify(keys))
+
+// JSON.parse(localStorage.getItem('history'))
+
 function App() {
   const [index, setIndex] = useState(null);
   const [locationIndex, setLocationIndex] = useState(null);
@@ -72,11 +76,9 @@ function App() {
 
   history.listen((location, action) => {
     const { key } = location;
-    // console.log(keys.indexOf(key) < keys.indexOf(previousKey));
 
     // If there is no key, it was a goBack.
     if (key === undefined) {
-      // console.log("goBack");
       return;
     }
 
@@ -85,11 +87,6 @@ function App() {
     // of `key` to the previous key in your keys array.
     if (!keys.includes(key)) {
       keys.push(key);
-      // console.log("goForward");
-    } else if (keys.indexOf(key) < keys.indexOf(previousKey)) {
-      // console.log("goBack");
-    } else {
-      // console.log("goForward");
     }
 
     previousKey = key;
