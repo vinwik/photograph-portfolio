@@ -95,7 +95,21 @@ function App() {
   const transitions = useTransition(
     location,
     (location) => location.pathname,
-    !isExpanded
+    !introEnded
+      ? {
+          // config: { mass: 1, tension: 110, friction: 20 },
+          config: { duration: 0 },
+          from: {
+            transform: "translate(0%,0%)",
+            position: "absolute",
+            overflow: "hidden",
+          },
+          enter: { transform: "translate(0%,0%)" },
+          leave: {
+            transform: "translate(0%,0%)",
+          },
+        }
+      : !isExpanded
       ? {
           config: { mass: 1, tension: 110, friction: 20 },
     from: {
