@@ -46,6 +46,8 @@ function ContactPage({
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
+  const [isModalOpened, setIsModalOpened] = useState(false);
+
   const AnimatedBgSolidDark = useSpring(
     index !== null && {
       to: { background: bgSolidDark[index] },
@@ -67,17 +69,24 @@ function ContactPage({
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+
     const data = { "form-name": "contact", name, email, message };
 
     fetch("/", {
       method: "POST",
       // headers: { "Content-Type": 'multipart/form-data; boundary=random' },
+      // headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: encode(data),
     })
-      .then(() => setStatus("Form Submission Successful!!"))
-      .catch((error) => setStatus("Form Submission Failed!"));
-
-    e.preventDefault();
+      .then((res) => {
+        // setStatus("success");
+        setIsModalOpened(true);
+        res.ok();
+      })
+      .catch((error) => {
+        setStatus("fail");
+      });
   };
 
   const handleChange = (e) => {
@@ -90,6 +99,16 @@ function ContactPage({
     }
     if (name === "message") {
       return setMessage(value);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpened(false);
+    if (status !== "fail") {
+      setName("");
+      setStatus("");
+      setEmail("");
+      setMessage("");
     }
   };
 
@@ -149,7 +168,7 @@ function ContactPage({
           Contact
         </h1>
       </SectionHeader>
-      <SectionContent contact>
+      <SectionContent contact index={index}>
         <h1>Hey there!</h1>
         <h2>
           Want to have a chat ? <br />
@@ -186,10 +205,15 @@ function ContactPage({
               value={message}
               onChange={handleChange}
               required
-            />
+            ></textarea>
           </div>
 
-          <button type="submit">
+          <button
+            type="submit"
+            disabled={
+              name === "" || email === "" || message === "" ? true : false
+            }
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
@@ -207,6 +231,25 @@ function ContactPage({
             </svg>
           </button>
         </form>
+        <div
+          className="form-validation"
+          isModalOpened={isModalOpened}
+          style={{ display: isModalOpened ? "flex" : "none" }}
+        >
+          {status !== "fail" ? (
+            <>
+              <h1>Great!</h1>
+              <h2>Your message has been sent.</h2>
+            </>
+          ) : (
+            <>
+              <h1>Oops!</h1>
+              <h2>Your message failed to send.</h2>
+            </>
+          )}
+
+          <button onClick={() => handleCloseModal()}>Go Back</button>
+        </div>
       </SectionContent>
     </Contact>
   );
@@ -287,6 +330,7 @@ const SectionContent = styled.div`
   flex-grow: 1;
   justify-content: ${({ contact }) => (contact ? "center" : "center")};
   padding-top: ${({ contact }) => (contact ? "100px" : 0)};
+  position: relative;
 
   h1 {
     line-height: ${({ contact }) => (contact ? 2 : 1.2)};
@@ -347,6 +391,9 @@ const SectionContent = styled.div`
     &:hover {
       background-color: rgba(255, 255, 255, 0.35);
     }
+    &:disabled {
+      pointer-events: none;
+    }
   }
   svg {
     width: 20px;
@@ -366,6 +413,25 @@ const SectionContent = styled.div`
 
     button {
       transform: unset;
+    }
+  }
+
+  .form-validation {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: ${(props) => bgSolidDark[props.index] + "f0"};
+    /* display: ${(props) => (props.isModalOpened ? "flex" : "none")}; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      transform: unset;
+      margin: 3em 0 0 0;
     }
   }
 `;
