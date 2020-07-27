@@ -22,11 +22,14 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
   //   const [isModalOpened, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [imagesPosition, setImagesPosition] = useState([]);
+  const [imagePosition, setImagePosition] = useState(null);
   const [clonePosition, setClonePosition] = useState(null);
   const [endPosition, setEndPosition] = useState(null);
+  const [lightBoxImageOpacity, setLightBoxImageOpacity] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [opacity, setOpacity] = useState(0);
   const [scale, setScale] = useState(1);
+  const [index, setIndex] = useState(null);
 
   const showActiveImage = (currentImage) => {
     setIsModalOpen(true);
@@ -92,6 +95,8 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
                 clonePosition={clonePosition}
                 setClonePosition={setClonePosition}
                 currentImage={currentImage}
+                index={index}
+                setIndex={setIndex}
                 i={i}
               />
             );
@@ -107,6 +112,10 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
           endPosition={endPosition}
           isModalOpened={isModalOpened}
           scrollY={scrollY}
+          index={index}
+          setIndex={setIndex}
+          lightBoxImageOpacity={lightBoxImageOpacity}
+          setLightBoxImageOpacity={setLightBoxImageOpacity}
         />
       )}
 
@@ -118,6 +127,7 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
         setIsModalOpen={setIsModalOpen}
         setEndPosition={setEndPosition}
         windowHeight={windowHeight}
+        lightBoxImageOpacity={lightBoxImageOpacity}
       />
       {/* )} */}
       {/* </Grid> */}
@@ -131,19 +141,29 @@ const Image = ({
   showActiveImage,
   imagesPosition,
   setImagesPosition,
+  // imagePosition,
+  // setImagePosition,
   clonePosition,
   setClonePosition,
   currentImage,
   i,
+  index,
+  setIndex,
 }) => {
   const [imagePosition, setImagePosition] = useState(null);
 
   //   console.log(imagePosition);
+  useEffect(() => {
+    if (i === index) {
+      setClonePosition(imagePosition);
+      showActiveImage(image);
+    }
+  }, [i, index, imagePosition, image]);
 
   return (
     <div
-      onClick={() => showActiveImage(image)}
-      // style={{ width: "100%", height: "100%" }}
+    // onClick={() => showActiveImage(image)}
+    // style={{ width: "100%", height: "100%" }}
     >
       <Measure
         bounds
@@ -160,7 +180,7 @@ const Image = ({
           return (
             <Img
               ref={measureRef}
-              onClick={() => setClonePosition(imagePosition)}
+              onClick={() => setIndex(i)}
               clonePosition={clonePosition}
               isCurrentImage={image === currentImage}
             >
@@ -192,7 +212,12 @@ const CloneImage = ({
   endPosition,
   isModalOpened,
   scrollY,
+  index,
+  setIndex,
+  lightBoxImageOpacity,
+  setLightBoxImageOpacity,
 }) => {
+  const [opacity, setOpacity] = useState(1);
   const AnimatedCloneEnter = useSpring(
     isModalOpened
       ? {
@@ -209,7 +234,10 @@ const CloneImage = ({
             position: "absolute",
             zIndex: 100,
           },
-
+          onRest: () => {
+            setLightBoxImageOpacity(1);
+            setOpacity(0);
+          },
           // delay: 1000,
           // config: { mass: 5, tension: 50, friction: 14 },
           //   config: { mass: 1, tension: 170, friction: 26, clamp: true },
@@ -229,7 +257,15 @@ const CloneImage = ({
             position: "absolute",
             zIndex: 100,
           },
-          onRest: () => setClonePosition(null),
+          onStart: () => {
+            setOpacity(1);
+            setLightBoxImageOpacity(0);
+          },
+          onRest: () => {
+            setClonePosition(null);
+            setIndex(null);
+            // setOpacity(1);
+          },
           //   config: { mass: 1, tension: 170, friction: 26, clamp: true },
 
           // delay: 1000,
@@ -241,7 +277,8 @@ const CloneImage = ({
     <animated.img
       src={currentImage}
       alt={currentImage}
-      style={AnimatedCloneEnter}
+      style={{ ...AnimatedCloneEnter, opacity: opacity }}
+      onClick={() => setIndex(index + 1)}
     />
   );
 };
@@ -254,6 +291,7 @@ const LightBox = ({
   setEndPosition,
   clonePosition,
   windowHeight,
+  lightBoxImageOpacity,
 }) => {
   const [opacity, setOpacity] = useState(0);
   const [imagePosition, setImagePosition] = useState(null);
@@ -332,7 +370,7 @@ const LightBox = ({
                   //   objectFit: "contain",
                   //   transform: `${isModalOpened ? "scale(1)" : "scale(0.4)"}`,
                   //   transition: "transform 0.6s ease-in-out",
-                  opacity: 0,
+                  opacity: lightBoxImageOpacity,
                   //   display: "block",
                 }}
               />
