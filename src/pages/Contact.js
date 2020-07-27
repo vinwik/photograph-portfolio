@@ -75,18 +75,15 @@ function ContactPage({
 
     fetch("/", {
       method: "POST",
-      // headers: { "Content-Type": 'multipart/form-data; boundary=random' },
-      // headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: encode(data),
-    })
-      .then((res) => {
-        // setStatus("success");
-        setIsModalOpened(true);
-        res.ok();
-      })
-      .catch((error) => {
+    }).then((res) => {
+      setIsModalOpened(true);
+      if (res.ok) {
+        setStatus("success");
+      } else {
         setStatus("fail");
-      });
+      }
+    });
   };
 
   const handleChange = (e) => {
@@ -104,7 +101,7 @@ function ContactPage({
 
   const handleCloseModal = () => {
     setIsModalOpened(false);
-    if (status !== "fail") {
+    if (status === "success") {
       setName("");
       setStatus("");
       setEmail("");
@@ -236,7 +233,7 @@ function ContactPage({
           isModalOpened={isModalOpened}
           style={{ display: isModalOpened ? "flex" : "none" }}
         >
-          {status !== "fail" ? (
+          {status === "success" ? (
             <>
               <h1>Great!</h1>
               <h2>Your message has been sent.</h2>
