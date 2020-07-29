@@ -8,7 +8,7 @@ import { polyfill } from "smoothscroll-polyfill";
 import Work from "./pages/Work";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import Models from "./pages/Models";
+import Gallery from "./pages/Gallery";
 
 export function debounce(func, wait = 5, immediate = true) {
   let timeout;
@@ -44,6 +44,7 @@ const bgSolidDark = ["#1d1810", "#111A1D", "#111F11"];
 
 const menuItems = ["WORK", "ABOUT", "CONTACT"];
 const menuLinks = ["/", "/about", "/contact"];
+const gallerySection = ["/models", "/travel", "/cuisine"];
 
 // const supportsNativeSmoothScroll =
 //   "scrollBehavior" in document.documentElement.style;
@@ -113,8 +114,7 @@ function App() {
       ? {
           config: { mass: 1, tension: 110, friction: 20 },
     from: {
-      transform:
-              location.pathname === "/models"
+            transform: gallerySection.includes(location.pathname)
           ? "translate(0%,0%)"
                 : history.action === "PUSH"
                 ? "translate(-100%,0%)"
@@ -216,7 +216,7 @@ function App() {
     // setTimeout(() => {
     setIntroEnded(true);
     // }, 2500);
-    if (opacity && introEnded) {
+    if (opacity && introEnded && index === null) {
       setIndex(0);
     }
     if (scrollY > windowHeight * 0.3 - 60) {
@@ -237,6 +237,7 @@ function App() {
         isExpanded={isExpanded}
         isMobile={isMobile}
         location={location}
+        opacity={opacity}
       />
       <Intro
         introEnded={introEnded}
@@ -250,9 +251,8 @@ function App() {
         introEnded={introEnded}
         navBg={navBg}
         isExpanded={isExpanded}
-        location={location}
         isModalOpened={isModalOpened}
-        isGallery={location.pathname === "/models"}
+        isGallery={gallerySection.includes(location.pathname)}
       >
         <LogoWrapper
           index={index}
@@ -260,7 +260,7 @@ function App() {
           isExpanded={isExpanded}
           className="nav__logo-wrapper"
           onClick={() => {
-            location.pathname === "/models" && history.goBack();
+            gallerySection.includes(location.pathname) && history.goBack();
           }}
         >
           <Logo />
@@ -350,6 +350,7 @@ function App() {
                     opacity={opacity}
                     windowHeight={windowHeight}
                     history={history}
+                    gallerySection={gallerySection}
                   />
                 )}
               />
@@ -357,22 +358,47 @@ function App() {
                 exact
                 path="/models"
                 render={() => (
-                  <Models
-                    isExpanded={isExpanded}
-                    setIsExpanded={setIsExpanded}
-                    index={index}
-                    setIndex={setIndex}
-                    scrollPosition={scrollPosition}
-                    setScrollPosition={setScrollPosition}
-                    introEnded={introEnded}
-                    setIntroEnded={setIntroEnded}
-                    opacity={opacity}
+                  <Gallery
                     windowHeight={windowHeight}
                     isModalOpened={isModalOpened}
                     setIsModalOpen={setIsModalOpen}
+                    pageIndex={index}
+                    setPageIndex={setIndex}
+                    location={location}
+                    gallerySection={gallerySection}
                   />
                 )}
-              ></Route>
+              />
+              <Route
+                exact
+                path="/travel"
+                render={() => (
+                  <Gallery
+                    windowHeight={windowHeight}
+                    isModalOpened={isModalOpened}
+                    setIsModalOpen={setIsModalOpen}
+                    pageIndex={index}
+                    setPageIndex={setIndex}
+                    location={location}
+                    gallerySection={gallerySection}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/cuisine"
+                render={() => (
+                  <Gallery
+                    windowHeight={windowHeight}
+                    isModalOpened={isModalOpened}
+                    setIsModalOpen={setIsModalOpen}
+                    pageIndex={index}
+                    setPageIndex={setIndex}
+                    location={location}
+                    gallerySection={gallerySection}
+                  />
+                )}
+              />
               <Route
                 path="/about"
                 render={() => (
@@ -435,9 +461,11 @@ html::-webkit-scrollbar {
     background: ${(props) =>
       props.isExpanded ? bgSolid[props.index] : bgSolidDark[props.index]};
     transition: ${(props) =>
-      props.isExpanded
+      !props.opacity
+        ? "initial"
+        : props.isExpanded
         ? "background 0.05s ease-in-out"
-        : "background 0.6s ease-in-out 1.2s"};
+        : "background 0.6s ease-in-out 0.6s"};
 
     @supports (-webkit-touch-callout: none) {
       overflow: ${({ location, isExpanded }) =>
