@@ -29,8 +29,6 @@ const bgGradient = [
   "radial-gradient(ellipse at 50%, #194617 0%, #111F11 60%)",
 ];
 
-const menuLinks = ["/models", "/about", "/contact"];
-
 function Work({
   isExpanded,
   setIsExpanded,
