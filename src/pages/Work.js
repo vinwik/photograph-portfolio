@@ -41,6 +41,7 @@ function Work({
   introEnded,
   opacity,
   history,
+  gallerySection,
 }) {
   const AnimatedBgGradient = useSpring({
     to: { background: bgGradient[index !== null && introEnded ? index : 0] },
@@ -81,7 +82,7 @@ function Work({
             isCurrent={index === i}
             isPrev={index > i}
             isNext={index < i}
-            onClick={() => history.push("/models")}
+            onClick={() => history.push(gallerySection[index])}
           >
             <ImageLeft src={slide.left} alt="modals" isCurrent={index === i} />
             <ImageRight
