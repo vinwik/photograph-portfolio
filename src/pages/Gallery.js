@@ -1,24 +1,20 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import Sheltr, { SharedElement } from "@taito/react-sheltr";
 import { useSpring, useTransition, animated } from "react-spring";
 import Measure from "react-measure";
 
-const images = [
-  "./gallery/modals.jpg",
-  "./gallery/travel.jpg",
-  "./gallery/cuisine.jpg",
-  "./gallery/about.jpg",
-  "./gallery/contact.jpg",
-  "./gallery/modals-copy.jpg",
-  "./gallery/travel-copy.jpg",
-  "./gallery/cuisine-copy.jpg",
-  "./gallery/about-copy.jpg",
-  "./gallery/contact-copy.jpg",
-];
+let images = [];
 
-function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
+function Gallery({
+  isModalOpened,
+  setIsModalOpen,
+  windowHeight,
+  pageIndex,
+  setPageIndex,
+  location,
+  gallerySection,
+}) {
   //   const [isModalOpened, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [imagesPosition, setImagesPosition] = useState([]);
@@ -43,16 +39,36 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
   // console.log(clonePosition);
   // console.log(endPosition);
   // console.log(scrollY);
+  // console.log(scrollY);
 
   const pageEl = useRef(null);
+
+  function importAll(r) {
+    return r.keys().map(r);
+  }
 
   const handleScroll = () => {
     setScrollY(pageEl.current.scrollTop);
   };
 
+  const dynamicImport = [
+    require.context("../assets/models", true, /\.(png|jpe?g)$/),
+    require.context("../assets/travel", true, /\.(png|jpe?g)$/),
+    require.context("../assets/cuisine", true, /\.(png|jpe?g)$/),
+  ];
+
+  const currentPage = gallerySection.indexOf(location.pathname);
+
+  console.log(currentPage);
+  console.log(location.pathname);
+  console.log(pageIndex);
+
   useEffect(() => {
     setOpacity(1);
-
+    if (pageIndex !== currentPage) {
+      setPageIndex(currentPage);
+    }
+    images = importAll(dynamicImport[currentPage]);
     // setTimeout(() => {
     //   setScale(0.7);
     //   setTimeout(() => {
@@ -61,28 +77,27 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
     //   }, 100);
     // }, 100);
     return () => setIsModalOpen(false);
-  }, []);
+  }, [pageIndex]);
 
   return (
-    <div
+    <GalleryPage
       ref={pageEl}
       onScroll={handleScroll}
-      style={{
-        overflowY: "scroll",
-        width: "100%",
-        padding: "3em",
-        paddingTop: "100px",
-        zIndex: 100,
-        opacity: opacity,
-        // transform: `scale(${scale})`,
-        transition: opacity
-          ? "opacity 0.8s ease-in-out 0.6s, transform 0.8s ease-in-out"
-          : "none",
-        // height: `${window.innerHeight}px`,
-      }}
+      opacity={opacity}
+      // style={{
+      //   overflowY: "scroll",
+      //   width: "100%",
+      //   padding: "3em",
+      //   paddingTop: "100px",
+      //   zIndex: 100,
+      //   opacity: opacity,
+      //   // transform: `scale(${scale})`,
+      //   transition: opacity
+      //     ? "opacity 0.8s ease-in-out 0.6s, transform 0.8s ease-in-out"
+      //     : "none",
+      //   // height: `${window.innerHeight}px`,
+      // }}
     >
-      {/* <Sheltr> */}
-      {/* <Grid> */}
       <ResponsiveMasonry columnsCountBreakPoints={{ 500: 2, 800: 3, 1100: 4 }}>
         <Masonry gutter="15px">
           {images.map((image, i) => {
@@ -103,7 +118,6 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
           })}
         </Masonry>
       </ResponsiveMasonry>
-      {/* {isModalOpened && ( */}
       {clonePosition && (
         <CloneImage
           currentImage={currentImage}
@@ -129,10 +143,7 @@ function Models({ isModalOpened, setIsModalOpen, windowHeight }) {
         windowHeight={windowHeight}
         lightBoxImageOpacity={lightBoxImageOpacity}
       />
-      {/* )} */}
-      {/* </Grid> */}
-      {/* </Sheltr> */}
-    </div>
+    </GalleryPage>
   );
 }
 
@@ -170,9 +181,6 @@ const Image = ({
         onResize={(contentRect) => {
           setImagePosition(contentRect.bounds);
         }}
-        //   onClick={(contentRect) => {
-        //     setClonePosition(contentRect.bounds);
-        //   }}
       >
         {({ measureRef }) => {
           // console.log(measureRef);
@@ -341,68 +349,47 @@ const LightBox = ({
           d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
         ></path>
       </svg>
-      {/* <h1 onClick={() => setIsModalOpen(false)}>X</h1> */}
-      {/* <SharedElement sharedId={currentImage} startOnUnmount>
-        {(sheltrProps) => ( */}
       <Measure
         bounds
         onResize={(contentRect) => {
-          //   setImagePosition(contentRect.bounds);
           setEndPosition(contentRect.bounds);
         }}
       >
         {({ measureRef }) => {
-          // console.log(measureRef);
-
           return (
-            <div
-              ref={measureRef}
-              onClick={() => setEndPosition(imagePosition)}
-              //   style={{ maxWidth: "100%", maxHeight: "100%" }}
-            >
+            <div ref={measureRef} onClick={() => setEndPosition(imagePosition)}>
               <img
                 src={currentImage}
                 alt={currentImage}
                 style={{
                   maxWidth: "100%",
-                  //   maxHeight: "90vh",
                   maxHeight: "90vh",
-                  //   objectFit: "contain",
-                  //   transform: `${isModalOpened ? "scale(1)" : "scale(0.4)"}`,
-                  //   transition: "transform 0.6s ease-in-out",
                   opacity: lightBoxImageOpacity,
-                  //   display: "block",
                 }}
               />
             </div>
           );
         }}
       </Measure>
-      {/* )}
-      </SharedElement> */}
     </div>
   );
 };
 
-export default Models;
+export default Gallery;
 
-const Grid = styled.div`
-  display: grid;
-  /* grid-template-columns: repeat(6, 1fr); */
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  /* grid-template-rows: repeat(8, 200px); */
-  /* grid-template-rows: auto; */
-  /* grid-auto-rows: 40px; */
-  grid-gap: 1.5em;
-  /* justify-content: center;
-  align-items: center; */
-  div {
-    /* width: 25%; */
-  }
-  img {
-    /* width: 100%; */
-    /* height: 100%; */
-    /* object-fit: cover; */
+const GalleryPage = styled.div`
+  overflow-y: scroll;
+  width: 100%;
+  padding: 3em;
+  padding-top: 100px;
+  z-index: 100;
+  opacity: ${(props) => props.opacity};
+  transition: ${(props) =>
+    props.opacity
+      ? "opacity 0.8s ease-in-out 0.6s, transform 0.8s ease-in-out"
+      : "none"};
+  @media screen and (max-width: 600px) {
+    padding-top: 60px;
   }
 `;
 const Img = styled.div`
