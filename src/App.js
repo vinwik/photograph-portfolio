@@ -213,9 +213,9 @@ function App() {
       img.src = image;
       img.onload = handleLoaded;
     });
-    // setTimeout(() => {
+    setTimeout(() => {
     setIntroEnded(true);
-    // }, 2500);
+    }, 2500);
     if (opacity && introEnded && index === null) {
       setIndex(0);
     }
