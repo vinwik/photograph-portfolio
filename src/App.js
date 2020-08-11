@@ -253,6 +253,7 @@ function App() {
         isExpanded={isExpanded}
         isModalOpened={isModalOpened}
         isGallery={gallerySection.includes(location.pathname)}
+        location={location}
       >
         <LogoWrapper
           index={index}
