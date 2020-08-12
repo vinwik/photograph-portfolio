@@ -357,7 +357,10 @@ const LightBox = ({
       >
         {({ measureRef }) => {
           return (
+            <div
+              ref={measureRef}
               // onClick={() => setEndPosition(imagePosition)}
+            >
               <img
                 src={currentImage}
                 alt={currentImage}
